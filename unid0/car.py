@@ -47,7 +47,8 @@ class Car:
 
     def switch_engine(self):
         """
-        Turns the engine on or off, depending on the state of _engine_is_on property and current __fuel.
+        Turns the engine on or off, depending on the state of _engine_is_on
+        property and current __fuel.
         """
         if self._engine_is_on:
             self._engine_is_on = False
