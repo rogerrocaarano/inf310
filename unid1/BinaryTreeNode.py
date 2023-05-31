@@ -2,6 +2,7 @@
 Title: Tree Node Class for binary Search Tree
 Author: Róger Roca Arano
 Date: 2022-05-29
+github: https://github.com/rogerrocaarano/inf310
 """
 
 
@@ -34,10 +35,6 @@ class BinaryTreeNode:
     @property
     def parent(self):
         return self.__parent
-
-    # @property
-    # def deep(self):
-    #     return self.__deep
 
     # Setter methods
     @data.setter

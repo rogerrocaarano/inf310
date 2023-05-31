@@ -2,6 +2,7 @@
 Title: Binary Search Tree
 Author: Róger Roca Arano
 Date: 2022-05-29
+github: https://github.com/rogerrocaarano/inf310
 """
 from BinaryTreeNode import BinaryTreeNode
 
@@ -18,6 +19,7 @@ class BinarySearchTree:
     def root(self):
         return self.__root
 
+    @property
     def deep(self):
         left_deep = self.get_left_deep(self.root)
         right_deep = self.get_right_deep(self.root)
@@ -351,43 +353,3 @@ class BinarySearchTree:
             new_root.left = self.root
             self.root.parent = new_root
             self.__root = new_root
-
-    # def __rotate_clockwise(self):
-    #     """
-    #     Private method for rotating the tree clockwise.
-    #     """
-    #     if self.root.left is None:
-    #         return
-    #
-    #     # Get the new values for root and right nodes
-    #     new_root = self.root.left
-    #     new_right = self.root
-    #     # Set the parents of the new nodes
-    #     new_root.parent = None
-    #     new_right.parent = new_root
-    #     # Set right nodes of new root and right
-    #     if new_root.right is not None:
-    #         new_right.left = new_root.right
-    #     new_root.right = new_right
-    #     # Set the new root
-    #     self.__root = new_root
-    #
-    # def __rotate_counterclockwise(self):
-    #     """
-    #     Private method for rotating the tree counterclockwise.
-    #     """
-    #     if self.root.right is None:
-    #         return
-    #
-    #     # Get the new values for root and left nodes
-    #     new_root = self.root.right
-    #     new_left = self.root
-    #     # Set the parents of the new nodes
-    #     new_root.parent = None
-    #     new_left.parent = new_root
-    #     # Set left nodes of new root and left
-    #     if new_root.left is not None:
-    #         new_left.right = new_root.left
-    #     new_root.left = new_left
-    #     # Set the new root
-    #     self.__root = new_root
