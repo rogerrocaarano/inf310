@@ -3,19 +3,39 @@ Title: Binary Search Tree
 Author: Róger Roca Arano
 Date: 2022-05-29
 """
-from TreeNode import TreeNode
+from BinaryTreeNode import BinaryTreeNode
 
 
 class BinarySearchTree:
     def __init__(self, tree_array: "list" = None):
-        self.__root: TreeNode = None
-        # self.__deep: int = 0
+        self.__root: BinaryTreeNode = None
         if tree_array is not None:
             for i in tree_array:
                 self.insert(i)
 
+    # Getter methods
+    @property
+    def root(self):
+        return self.__root
+
+    def deep(self):
+        left_deep = self.get_left_deep(self.root)
+        right_deep = self.get_right_deep(self.root)
+        return max(left_deep, right_deep)
+
+    # ----------------------------------------------------------------------- #
+    # Utility methods
+
     def __str__(self, traversal_type: str = "inorder"):
-        tree_list = list()
+        """
+        Function for getting a string representation of the tree using the
+        specified traversal type.
+        :param traversal_type: Choose between inorder, preorder or postorder.
+        :return: A string representation of the tree.
+        """
+        tree_list = list()  # List for storing the tree nodes
+
+        # Pass the list to the traversal method to fill it
         if traversal_type == "inorder":
             self.__in_order(self.__root, tree_list)
         elif traversal_type == "preorder":
@@ -25,27 +45,13 @@ class BinarySearchTree:
         else:
             return "Invalid traversal type."
 
+        # Return the list as a string
         output = tree_list.__str__()
         output = output + f"\nTree deep: {self.deep}"
         return output
 
-    # Getter methods
-    @property
-    def root(self):
-        return self.__root
-
-    @property
-    def deep(self):
-        left_deep = self.get_left_deep(self.root)
-        right_deep = self.get_right_deep(self.root)
-        return left_deep if left_deep > right_deep else right_deep
-
-    # Setter methods
-
-    # ----------------------------------------------------------------------- #
-    # Utility methods
     @staticmethod
-    def __is_leaf(node: "TreeNode"):
+    def __is_leaf(node: "BinaryTreeNode"):
         """
         Private method for checking if a node is a leaf.
         :param node: Node to be checked.
@@ -54,7 +60,7 @@ class BinarySearchTree:
         return node.left is None and node.right is None
 
     @staticmethod
-    def __has_one_child(node: "TreeNode"):
+    def __has_one_child(node: "BinaryTreeNode"):
         """
         Private method for checking if a node has one child.
         :param node: Node to be checked.
@@ -63,7 +69,7 @@ class BinarySearchTree:
         return node.left is None or node.right is None
 
     @staticmethod
-    def __higher_from_left(root: "TreeNode"):
+    def __higher_from_left(root: "BinaryTreeNode"):
         """
         Private method for getting the highest node in the left subtree.
         :param root: Root of the subtree.
@@ -78,7 +84,7 @@ class BinarySearchTree:
         return higher
 
     @staticmethod
-    def __lower_from_right(root: "TreeNode"):
+    def __lower_from_right(root: "BinaryTreeNode"):
         """
         Private method for getting the lowest node in the right subtree.
         :param root: Root of the subtree.
@@ -95,7 +101,15 @@ class BinarySearchTree:
     # ----------------------------------------------------------------------- #
     # Searching
 
-    def __search(self, root: "TreeNode", value):
+    def search(self, value):
+        """
+        Public method for searching a node in the tree.
+        :param value: Value to be searched.
+        :return: Node with the value searched or None if not found.
+        """
+        return self.__search(self.__root, value)
+
+    def __search(self, root: "BinaryTreeNode", value):
         """
         Private method for searching a node in the tree.
         :param root: Starting node for the search.
@@ -114,18 +128,65 @@ class BinarySearchTree:
         else:
             return self.__search(root.right, value)
 
-    def search(self, value):
+    # ----------------------------------------------------------------------- #
+    # Traversal
+    # A BST can be traversed through three basic algorithms: inorder, preorder,
+    # and postorder tree walks.
+    def __in_order(self, node: "BinaryTreeNode", tree: "list"):
         """
-        Public method for searching a node in the tree.
-        :param value: Value to be searched.
-        :return: Node with the value searched or None if not found.
+        Nodes from the left subtree get visited first, followed by the root
+        node and right subtree.
+        :param node:
+        :param tree:
+        :return:
         """
-        return self.__search(self.__root, value)
+        if node is not None:
+            self.__in_order(node.left, tree)
+            tree.append(node.data)
+            self.__in_order(node.right, tree)
+
+    def __pre_order(self, node: "BinaryTreeNode", tree: "list"):
+        """
+        The root node gets visited first, followed by left and right subtrees.
+        :param node:
+        :param tree:
+        :return:
+        """
+        if node is not None:
+            tree.append(node.data)
+            self.__pre_order(node.left, tree)
+            self.__pre_order(node.right, tree)
+
+    def __post_order(self, node: "BinaryTreeNode", tree: "list"):
+        """
+        Nodes from the left subtree get visited first, followed by the right
+        subtree, and finally the root.
+        :param node:
+        :param tree:
+        :return:
+        """
+        if node is not None:
+            self.__post_order(node.left, tree)
+            self.__post_order(node.right, tree)
+            tree.append(node.data)
 
     # ----------------------------------------------------------------------- #
     # Insertion
 
-    def __insert(self, root: "TreeNode", node: "TreeNode"):
+    def insert(self, value):
+        """
+        Public method for inserting a node in the tree.
+        :param value: Value to be inserted.
+        """
+        node = BinaryTreeNode(value)
+        # Case 1: Empty tree
+        if self.__root is None:
+            self.__root = node
+        # Case 2: Non-empty tree
+        else:
+            self.__insert(self.__root, node)
+
+    def __insert(self, root: "BinaryTreeNode", node: "BinaryTreeNode"):
         """
         Private method for inserting a node in the tree.
         :param root: Starting node for the insertion.
@@ -151,52 +212,8 @@ class BinarySearchTree:
         # self.deep = node.deep
         self.__insert(root, node)
 
-    def insert(self, value):
-        """
-        Public method for inserting a node in the tree.
-        :param value: Value to be inserted.
-        """
-        node = TreeNode(value)
-        # Case 1: Empty tree
-        if self.__root is None:
-            self.__root = node
-        # Case 2: Non-empty tree
-        else:
-            self.__insert(self.__root, node)
-
     # ----------------------------------------------------------------------- #
     # Deletion
-
-    @staticmethod
-    def __delete_leaf(node: "TreeNode"):
-        """
-        Private method for deleting a leaf.
-        :param node: Node to be deleted.
-        """
-        if node.parent.left == node:
-            node.parent.left = None
-        else:
-            node.parent.right = None
-        del node
-
-    @staticmethod
-    def __delete_single_child_node(node: "TreeNode"):
-        """
-        Private method for deleting a node with one child.
-        :param node: Node to be deleted.
-        """
-        # Get the child node and set its parent to the parent of the node to
-        # be deleted
-        child_node = node.left if (node.left is not None) else node.right
-        child_node.parent = node.parent
-
-        # Set the child node as the child of the parent of the node to be
-        # deleted and delete the node
-        if node.parent.left == node:
-            node.parent.left = child_node
-        else:
-            node.parent.right = child_node
-        del node
 
     def delete(self, value):
         """
@@ -225,54 +242,58 @@ class BinarySearchTree:
             else:
                 self.__delete_single_child_node(higher)
 
-    # ----------------------------------------------------------------------- #
-    # Traversal
-    # A BST can be traversed through three basic algorithms: inorder, preorder,
-    # and postorder tree walks.
-    def __in_order(self, node: "TreeNode", tree: "list"):
+    @staticmethod
+    def __delete_leaf(node: "BinaryTreeNode"):
         """
-        Nodes from the left subtree get visited first, followed by the root
-        node and right subtree.
-        :param node:
-        :param tree:
-        :return:
+        Private method for deleting a leaf.
+        :param node: Node to be deleted.
         """
-        if node is not None:
-            self.__in_order(node.left, tree)
-            tree.append(node.data)
-            self.__in_order(node.right, tree)
+        if node.parent.left == node:
+            node.parent.left = None
+        else:
+            node.parent.right = None
+        del node
 
-    def __pre_order(self, node: "TreeNode", tree: "list"):
+    @staticmethod
+    def __delete_single_child_node(node: "BinaryTreeNode"):
         """
-        The root node gets visited first, followed by left and right subtrees.
-        :param node:
-        :param tree:
-        :return:
+        Private method for deleting a node with one child.
+        :param node: Node to be deleted.
         """
-        if node is not None:
-            tree.append(node.data)
-            self.__pre_order(node.left, tree)
-            self.__pre_order(node.right, tree)
+        # Get the child node and set its parent to the parent of the node to
+        # be deleted
+        child_node = node.left if (node.left is not None) else node.right
+        child_node.parent = node.parent
 
-    def __post_order(self, node: "TreeNode", tree: "list"):
-        """
-        Nodes from the left subtree get visited first, followed by the right
-        subtree, and finally the root.
-        :param node:
-        :param tree:
-        :return:
-        """
-        if node is not None:
-            self.__post_order(node.left, tree)
-            self.__post_order(node.right, tree)
-            tree.append(node.data)
+        # Set the child node as the child of the parent of the node to be
+        # deleted and delete the node
+        if node.parent.left == node:
+            node.parent.left = child_node
+        else:
+            node.parent.right = child_node
+        del node
 
     # ----------------------------------------------------------------------- #
     # Balance
     # A BST is balanced if the height of the left and right subtrees of every
     # node differ by at most 1.
 
-    def get_left_deep(self, root: "TreeNode"):
+    def balance(self):
+        """
+        Public method for balancing the tree.
+        """
+        if self.is_balanced(self.__root):
+            return
+        while not self.is_balanced(self.__root):
+            if (
+                    self.get_left_deep(self.__root) >
+                    self.get_right_deep(self.__root)
+            ):
+                self.__rotate("clockwise")
+            else:
+                self.__rotate("counterclockwise")
+
+    def get_left_deep(self, root: "BinaryTreeNode"):
         """
         Private method for getting the deep of the left subtree.
         :param root: Starting node for the search.
@@ -282,7 +303,7 @@ class BinarySearchTree:
             return 0
         return self.get_left_deep(root.left) + 1
 
-    def get_right_deep(self, root: "TreeNode"):
+    def get_right_deep(self, root: "BinaryTreeNode"):
         """
         Private method for getting the deep of the right subtree.
         :param root: Starting node for the search.
@@ -292,7 +313,7 @@ class BinarySearchTree:
             return 0
         return self.get_right_deep(root.right) + 1
 
-    def is_balanced(self, root: "TreeNode"):
+    def is_balanced(self, root: "BinaryTreeNode"):
         """
         Private method for checking if a BST is balanced.
         :param root: Starting node for the search.
@@ -306,54 +327,67 @@ class BinarySearchTree:
             return True
         return False
 
-    def __rotate_clockwise(self):
+    def __rotate(self, direction):
         """
-        Private method for rotating the tree clockwise.
+        Private method for rotating the tree in the specified direction.
+        :param direction: Direction of the rotation.
         """
-        if self.root.left is None:
-            return
+        if direction == 'clockwise' and self.root.left is not None:
+            new_root = self.root.left
+            self.root.left = new_root.right
+            if new_root.right is not None:
+                new_root.right.parent = self.root
+            new_root.parent = None
+            new_root.right = self.root
+            self.root.parent = new_root
+            self.__root = new_root
 
-        # Get the new values for root and right nodes
-        new_root = self.root.left
-        new_right = self.root
-        # Set the parents of the new nodes
-        new_root.parent = None
-        new_right.parent = new_root
-        # Set right nodes of new root and right
-        if new_root.right is not None:
-            new_right.left = new_root.right
-        new_root.right = new_right
-        # Set the new root
-        self.__root = new_root
+        elif direction == 'counterclockwise' and self.root.right is not None:
+            new_root = self.root.right
+            self.root.right = new_root.left
+            if new_root.left is not None:
+                new_root.left.parent = self.root
+            new_root.parent = None
+            new_root.left = self.root
+            self.root.parent = new_root
+            self.__root = new_root
 
-    def __rotate_counterclockwise(self):
-        """
-        Private method for rotating the tree counterclockwise.
-        """
-        if self.root.right is None:
-            return
-
-        # Get the new values for root and left nodes
-        new_root = self.root.right
-        new_left = self.root
-        # Set the parents of the new nodes
-        new_root.parent = None
-        new_left.parent = new_root
-        # Set left nodes of new root and left
-        if new_root.left is not None:
-            new_left.right = new_root.left
-        new_root.left = new_left
-        # Set the new root
-        self.__root = new_root
-
-    def balance(self):
-        if self.is_balanced(self.__root):
-            return
-        while not self.is_balanced(self.__root):
-            if (
-                    self.get_left_deep(self.__root) >
-                    self.get_right_deep(self.__root)
-            ):
-                self.__rotate_clockwise()
-            else:
-                self.__rotate_counterclockwise()
+    # def __rotate_clockwise(self):
+    #     """
+    #     Private method for rotating the tree clockwise.
+    #     """
+    #     if self.root.left is None:
+    #         return
+    #
+    #     # Get the new values for root and right nodes
+    #     new_root = self.root.left
+    #     new_right = self.root
+    #     # Set the parents of the new nodes
+    #     new_root.parent = None
+    #     new_right.parent = new_root
+    #     # Set right nodes of new root and right
+    #     if new_root.right is not None:
+    #         new_right.left = new_root.right
+    #     new_root.right = new_right
+    #     # Set the new root
+    #     self.__root = new_root
+    #
+    # def __rotate_counterclockwise(self):
+    #     """
+    #     Private method for rotating the tree counterclockwise.
+    #     """
+    #     if self.root.right is None:
+    #         return
+    #
+    #     # Get the new values for root and left nodes
+    #     new_root = self.root.right
+    #     new_left = self.root
+    #     # Set the parents of the new nodes
+    #     new_root.parent = None
+    #     new_left.parent = new_root
+    #     # Set left nodes of new root and left
+    #     if new_root.left is not None:
+    #         new_left.right = new_root.left
+    #     new_root.left = new_left
+    #     # Set the new root
+    #     self.__root = new_root

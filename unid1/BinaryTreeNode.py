@@ -5,13 +5,12 @@ Date: 2022-05-29
 """
 
 
-class TreeNode:
-    def __init__(self, value, deep: int = 0):
+class BinaryTreeNode:
+    def __init__(self, value):
         self.__data = value
-        self.__left: TreeNode = None
-        self.__right: TreeNode = None
-        self.__parent: TreeNode = None
-        # self.__deep = deep
+        self.__left: BinaryTreeNode = None
+        self.__right: BinaryTreeNode = None
+        self.__parent: BinaryTreeNode = None
 
     def __str__(self):
         return f'- Data: {self.__data} ' \
@@ -46,17 +45,13 @@ class TreeNode:
         self.__data = value
 
     @left.setter
-    def left(self, node: "TreeNode"):
+    def left(self, node: "BinaryTreeNode"):
         self.__left = node
 
     @right.setter
-    def right(self, node: "TreeNode"):
+    def right(self, node: "BinaryTreeNode"):
         self.__right = node
 
     @parent.setter
-    def parent(self, node: "TreeNode"):
+    def parent(self, node: "BinaryTreeNode"):
         self.__parent = node
-
-    # @deep.setter
-    # def deep(self, value: int):
-    #     self.__deep = value

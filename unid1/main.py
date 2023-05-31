@@ -1,4 +1,4 @@
-from TreeNode import TreeNode
+from BinaryTreeNode import BinaryTreeNode
 from BinarySearchTree import BinarySearchTree
 
 # tree_array = [18, 9, 7, 12, 2, 8, 11, 25, 23, 29, 21, 24, 31]
