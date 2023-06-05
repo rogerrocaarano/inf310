@@ -107,7 +107,7 @@ class BinarySearchTree:
         """
         Public method for searching a node in the tree.
         :param value: Value to be searched.
-        :return: Node with the value searched or None if not found.
+        :return: Node with the data searched or None if not found.
         """
         return self.__search(self.__root, value)
 
@@ -116,7 +116,7 @@ class BinarySearchTree:
         Private method for searching a node in the tree.
         :param root: Starting node for the search.
         :param value: Value to be searched.
-        :return: Node with the value searched or None if not found.
+        :return: Node with the data searched or None if not found.
         """
         # Case 1: Empty tree
         if root.data is None:
@@ -200,7 +200,7 @@ class BinarySearchTree:
 
         # Case 2: recursive insertion
         node.parent = root
-        # node.deep = node.parent.deep + 1
+        # node.deep = node.self.deep + 1
         if node.data < root.data:
             if root.left is None:
                 root.left = node
@@ -262,12 +262,12 @@ class BinarySearchTree:
         Private method for deleting a node with one child.
         :param node: Node to be deleted.
         """
-        # Get the child node and set its parent to the parent of the node to
+        # Get the child node and set its self to the self of the node to
         # be deleted
         child_node = node.left if (node.left is not None) else node.right
         child_node.parent = node.parent
 
-        # Set the child node as the child of the parent of the node to be
+        # Set the child node as the child of the self of the node to be
         # deleted and delete the node
         if node.parent.left == node:
             node.parent.left = child_node

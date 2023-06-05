@@ -20,10 +20,10 @@ class MWaySearchTree:
                  pos: int = 0
                  ):
         """
-        Search for a value in the tree.
+        Search for a data in the tree.
         :param search_node: Node to start the search.
         :param value: Value to search for.
-        :return: The node where value is found and its position in the node.
+        :return: The node where data is found and its position in the node.
         """
         # If the tree is empty, return None
         if self.root is None:
@@ -31,20 +31,20 @@ class MWaySearchTree:
         # If no node is passed, start from the root
         if search_node is None:
             search_node = self.root
-        # If value is in the node, return the node and the position
+        # If data is in the node, return the node and the position
         if value is search_node.data[pos]:
             return [search_node, pos]
-        # Case 1: If value is less than the first value in the node and first
+        # Case 1: If data is less than the first data in the node and first
         # child is not None, search in the left child
         if value < search_node.data[pos] \
                 and search_node.child[pos] is not None:
             return self.__search(value, search_node.child[pos])
-        # Case 2: If value is greater than the last value in the node and last
+        # Case 2: If data is greater than the last data in the node and last
         # child is not None, search in the right child
         if search_node.data[pos] < value < search_node.data[pos + 1] \
                 and search_node.child[pos + 1] is not None:
             return self.__search(value, search_node.child[pos + 1])
-        # Case 3: If value is greater than the last value in the node and last
+        # Case 3: If data is greater than the last data in the node and last
         # child is not None, search in the right child
         if value > search_node.data[pos]:
             if search_node.data[pos + 1] is not None:
@@ -57,7 +57,7 @@ class MWaySearchTree:
 
     def insert(self, value):
         """
-        Insert a value in the tree.
+        Insert a data in the tree.
         :param value: Value to insert.
         :return: None
         """
@@ -66,9 +66,9 @@ class MWaySearchTree:
             self.__root = MWayTreeNode(self.max_children)
             self.root.data = value
         else:
-            # Search for the node where the value should be inserted
+            # Search for the node where the data should be inserted
             node, pos = self.__search(value)
-            # If the node is full, insert the value on its right child
+            # If the node is full, insert the data on its right child
             if node.full_node():
                 new_node = MWayTreeNode(self.max_children, node.parent)
                 new_node.data = value
