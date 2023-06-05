@@ -1,4 +1,4 @@
-from TreeNode import TreeNode
+from Trees.TreeNode import TreeNode
 
 
 class Tree:

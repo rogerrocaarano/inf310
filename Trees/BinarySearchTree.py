@@ -1,6 +1,6 @@
-from Tree import Tree
-from TreeNode import BinaryTreeNode
-from Exceptions import *
+from Trees.Tree import Tree
+from Trees.TreeNode import BinaryTreeNode
+from Trees.Exceptions import *
 
 
 class BinarySearchTree(Tree):
@@ -24,11 +24,11 @@ class BinarySearchTree(Tree):
 
         # Pass the list to the traversal method to fill it
         if traversal_type == "inorder":
-            self.__in_order(self.root, tree_list)
+            self.in_order(self.root, tree_list)
         elif traversal_type == "preorder":
-            self.__pre_order(self.root, tree_list)
+            self.pre_order(self.root, tree_list)
         elif traversal_type == "postorder":
-            self.__post_order(self.root, tree_list)
+            self.post_order(self.root, tree_list)
         else:
             return "Invalid traversal type."
 
@@ -199,7 +199,7 @@ class BinarySearchTree(Tree):
     # Traversal
     # A BST can be traversed through three basic algorithms: inorder, preorder,
     # and postorder tree walks.
-    def __in_order(self, node: "BinaryTreeNode", tree: "list"):
+    def in_order(self, node: "BinaryTreeNode", tree: "list"):
         """
         Nodes from the left subtree get visited first, followed by the root
         node and right subtree.
@@ -208,11 +208,11 @@ class BinarySearchTree(Tree):
         :return:
         """
         if node is not None:
-            self.__in_order(node.left, tree)
+            self.in_order(node.left, tree)
             tree.append(node.data)
-            self.__in_order(node.right, tree)
+            self.in_order(node.right, tree)
 
-    def __pre_order(self, node: "BinaryTreeNode", tree: "list"):
+    def pre_order(self, node: "BinaryTreeNode", tree: "list"):
         """
         The root node gets visited first, followed by left and right subtrees.
         :param node:
@@ -221,10 +221,10 @@ class BinarySearchTree(Tree):
         """
         if node is not None:
             tree.append(node.data)
-            self.__pre_order(node.left, tree)
-            self.__pre_order(node.right, tree)
+            self.pre_order(node.left, tree)
+            self.pre_order(node.right, tree)
 
-    def __post_order(self, node: "BinaryTreeNode", tree: "list"):
+    def post_order(self, node: "BinaryTreeNode", tree: "list"):
         """
         Nodes from the left subtree get visited first, followed by the right
         subtree, and finally the root.
@@ -233,6 +233,6 @@ class BinarySearchTree(Tree):
         :return:
         """
         if node is not None:
-            self.__post_order(node.left, tree)
-            self.__post_order(node.right, tree)
+            self.post_order(node.left, tree)
+            self.post_order(node.right, tree)
             tree.append(node.data)
