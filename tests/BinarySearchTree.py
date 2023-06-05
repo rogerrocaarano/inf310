@@ -29,6 +29,39 @@ class TestBinarySearchTree(unittest.TestCase):
         result = [5, 20, 10, 80, 60, 50, 110, 350, 300, 200, 180, 150, 100]
         self.assertEqual(result, ordered_tree)  # Root
 
+    def test_delete_case1(self):
+        """
+        Test for deleting a leaf node.
+        """
+        tree_array = [100, 50, 200, 30]
+        tree = BinarySearchTree(tree_array)
+        tree.delete(30)
+        ordered_tree = list()
+        tree.in_order(tree.root, ordered_tree)
+        self.assertEqual("[50, 100, 200]", ordered_tree.__str__())
+
+    def test_delete_case2(self):
+        """
+        Test for deleting the root node with one child.
+        """
+        tree_array = [100, 50]
+        tree = BinarySearchTree(tree_array)
+        tree.delete(100)
+        ordered_tree = list()
+        tree.in_order(tree.root, ordered_tree)
+        self.assertEqual("[50]", ordered_tree.__str__())
+
+    def test_delete_case3(self):
+        """
+        Test for deleteing a node with one child.
+        """
+        tree_array = [100, 50, 200, 150]
+        tree = BinarySearchTree(tree_array)
+        tree.delete(200)
+        ordered_tree = list()
+        tree.in_order(tree.root, ordered_tree)
+        self.assertEqual("[50, 100, 150]", ordered_tree.__str__())
+
 
 if __name__ == '__main__':
     unittest.main()

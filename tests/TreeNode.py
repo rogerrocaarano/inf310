@@ -3,14 +3,18 @@ from Trees.TreeNode import BinaryTreeNode
 
 
 class TestTreeNode(unittest.TestCase):
-    def test_BinaryTreeNode(self):
+    def test_BinaryTreeNode_case1(self):
+        """
+        Test for BinaryTreeNode class.
+        :return:
+        """
         # Sample node data:
         node1 = BinaryTreeNode(10)
         node2 = BinaryTreeNode(5)
         node3 = BinaryTreeNode(15)
 
-        node1.add_child(node2)
-        node1.add_child(node3)
+        node1.left = node2
+        node1.right = node3
 
         # Node 2 and 3 parent should be node 1
         self.assertEqual(node2.parent, node1)
@@ -19,49 +23,59 @@ class TestTreeNode(unittest.TestCase):
         self.assertEqual(node1.left, node2)
         self.assertEqual(node1.right, node3)
 
-    def test_BinaryTreeNode_Right(self):
-        # Sample node data:
+    def test_BinaryTreeNode_case2(self):
+        """
+        Test setting left node with value more than parent.
+        :return:
+        """
         node1 = BinaryTreeNode(10)
-        node2 = BinaryTreeNode(100)
+        node2 = BinaryTreeNode(15)
 
-        node1.add_child(node2)
+        with self.assertRaises(AssertionError):
+            node1.left = node2
 
-        # Node 1 right should be node 2
-        self.assertEqual(node1.right, node2)
-        # Node 2 parent should be node 1
-        self.assertEqual(node2.parent, node1)
-
-    def test_BinaryTreeNode_Left(self):
-        # Sample node data:
-        node1 = BinaryTreeNode(10)
-        node2 = BinaryTreeNode(5)
-
-        node1.add_child(node2)
-
-        # Node 1 left should be node 2
-        self.assertEqual(node1.left, node2)
-        # Node 2 parent should be node 1
-        self.assertEqual(node2.parent, node1)
-
-    def test_BinaryTreeNode_FullNode(self):
-        # Sample node data:
+    def test_BinaryTreeNode_case3(self):
+        """
+        Test setting right node with value less than parent.
+        :return:
+        """
         node1 = BinaryTreeNode(10)
         node2 = BinaryTreeNode(5)
-        node3 = BinaryTreeNode(15)
 
-        node1.add_child(node2)
-        node1.add_child(node3)
+        with self.assertRaises(AssertionError):
+            node1.right = node2
 
-        node4 = BinaryTreeNode(100)
-        node5 = BinaryTreeNode(1)
-        try:
-            node1.add_child(node4)
-        except Exception as e:
-            self.assertEqual(e.args[0], "Right node already set")
-        try:
-            node1.add_child(node5)
-        except Exception as e:
-            self.assertEqual(e.args[0], "Left node already set")
+    def test_BinaryTreeNode_case4(self):
+        """"
+        Test setting left node twice.
+        :return:
+        """
+        node1 = BinaryTreeNode(10)
+        node2 = BinaryTreeNode(5)
+        node3 = BinaryTreeNode(1)
+
+        node1.left = node2
+        node1.left = node3
+
+        self.assertEqual(node1.left, node3)
+        self.assertEqual(node2.parent, None)
+        self.assertEqual(len(node1.children), 1)
+
+    def test_BinaryTreeNode_case5(self):
+        """"
+        Test setting right node twice.
+        :return:
+        """
+        node1 = BinaryTreeNode(10)
+        node2 = BinaryTreeNode(15)
+        node3 = BinaryTreeNode(20)
+
+        node1.right = node2
+        node1.right = node3
+
+        self.assertEqual(node1.right, node3)
+        self.assertEqual(node2.parent, None)
+        self.assertEqual(len(node1.children), 1)
 
 
 if __name__ == '__main__':

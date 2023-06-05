@@ -47,14 +47,24 @@ class TreeNode:
     # Setter methods
     @parent.setter
     def parent(self, node: "TreeNode"):
+        assert len(self.children) < self.__max_children, \
+            "Number of children must be less than max_children"
+        # If node is already a child of the parent, do nothing
+        if node.parent is self:
+            return
+        # If node is already a child of another node, make it orphan
+        if node.parent is not None:
+            node.make_orphan()
+        # Add node as a child of the parent
+        self.__children.append(node)
+        self.__children.sort()
         self.__parent = node
 
     @children.setter
-    def children(self, children: list["TreeNode"]):
-        assert len(children) <= self.__max_children, \
-            "Number of children must be less or equal than max_children"
-        children.sort()
-        self.__children = children
+    def children(self, node: "TreeNode"):
+        self.__children.append(node)
+        self.__children.sort()
+        node.__parent = self
 
     # ----------------------------------------------------------------------- #
     # Overloaded operators methods for comparing nodes
@@ -82,22 +92,28 @@ class TreeNode:
     # ----------------------------------------------------------------------- #
     # Other methods
 
-    def add_child(self, node: "TreeNode"):
-        """
-        Method for adding a child to the node.
-        :param node: node to be added as a child.
-        """
-        if self.max_children > len(self.children):
-            self.__children.append(node)
-            self.__children.sort()
-            node.parent = self
-        else:
-            raise MaxChildrenReached
+    # def add_child(self, node: "TreeNode"):
+    #     """
+    #     Method for adding a child to the node.
+    #     :param node: node to be added as a child.
+    #     """
+    #     assert len(self.children) < self.__max_children, \
+    #         "Number of children must be less than max_children"
+    #     self.__children.append(node)
+    #     self.__children.sort()
 
     def __str__(self):
         return f'- Data: {self.__data} ' \
                f'- Parent: {self.parent.__repr__()} ' \
                f'- Children: {self.__children}'
+
+    def make_orphan(self):
+        """
+        Private method for making the node an orphan.
+        """
+        parent = self.__parent
+        parent.__children.remove(self)
+        self.__parent = None
 
 
 class BinaryTreeNode(TreeNode):
@@ -127,34 +143,50 @@ class BinaryTreeNode(TreeNode):
     # Setter methods
     @left.setter
     def left(self, node: "BinaryTreeNode"):
-        assert self > node, "Left node must be less than self"
+        if node is None:
+            self.left.make_orphan()
+            self.__left = None
+            return
+        assert self > node, \
+            "Left node must be less than its parent."
+        if self.left is not None:
+            self.left.make_orphan()
+        self.children = node
         self.__left = node
 
     @right.setter
     def right(self, node: "BinaryTreeNode"):
-        assert self < node, "Right node must be greater than self"
+        if node is None:
+            self.right.make_orphan()
+            self.__right = None
+            return
+        assert self < node, \
+            "Right node must be greater than its parent."
+        if self.right is not None:
+            self.right.make_orphan()
+        self.children = node
         self.__right = node
 
     # ----------------------------------------------------------------------- #
     # Other methods
-    def add_child(self, node: "BinaryTreeNode"):
-        if node == self:
-            return
-        try:
-            if node < self:
-                if self.left is not None:
-                    raise LeftNodeAlreadySet
-                else:
-                    self.left = node
-            else:
-                if self.right is not None:
-                    raise RightNodeAlreadySet
-                else:
-                    self.right = node
-        except (LeftNodeAlreadySet, RightNodeAlreadySet) as e:
-            raise e
-        else:
-            super().add_child(node)
+    # def add_child(self, node: "BinaryTreeNode"):
+    #     if node == self:
+    #         return
+    #     try:
+    #         if node < self:
+    #             if self.left is not None:
+    #                 raise LeftNodeAlreadySet
+    #             else:
+    #                 self.left = node
+    #         else:
+    #             if self.right is not None:
+    #                 raise RightNodeAlreadySet
+    #             else:
+    #                 self.right = node
+    #     except (LeftNodeAlreadySet, RightNodeAlreadySet) as e:
+    #         raise e
+    #     else:
+    #         super().add_child(node)
 
     def __str__(self):
         return f'- Data: {self.data} ' \

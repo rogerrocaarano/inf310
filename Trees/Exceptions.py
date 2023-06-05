@@ -20,3 +20,11 @@ class RightNodeAlreadySet(Exception):
                  ):
         self.message = message
         super().__init__(self.message)
+
+
+class InvalidPromotionMethod(Exception):
+    def __init__(self,
+                 message="Invalid promotion method"
+                 ):
+        self.message = message
+        super().__init__(self.message)

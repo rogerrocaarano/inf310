@@ -141,15 +141,18 @@ class BinarySearchTree(Tree):
         if root == node:
             return
         # Case 2: recursive insertion
-        try:
-            root.add_child(node)
+        if node < root:
+            if root.left is None:
+                root.left = node
+            else:
+                self.__insert(root.left, node)
+        else:
+            if root.right is None:
+                root.right = node
+            else:
+                self.__insert(root.right, node)
 
-        except LeftNodeAlreadySet:
-            self.__insert(root.left, node)
-        except RightNodeAlreadySet:
-            self.__insert(root.right, node)
-
-    def delete(self, value):
+    def delete(self, value, promote: str = "higher-left"):
         node = self.__search(self.root, value)
         # Case 1: Value not found
         if node is None:
@@ -161,7 +164,12 @@ class BinarySearchTree(Tree):
             self.__delete_one_child_node(node)
         # Case 4: Node has two children
         else:
-            pass
+            if promote == "higher-left":
+                self.__promote_higher_left(node)
+            elif promote == "lower-right":
+                self.__promote_lower_right(node)
+            else:
+                raise InvalidPromotionMethod
 
     def __delete_leaf_node(self, node: "BinaryTreeNode"):
         """
@@ -171,11 +179,15 @@ class BinarySearchTree(Tree):
         # Case 1: Node is the root
         if node is self.root:
             self.root = None
-
-        if node.parent.left is node:
-            node.parent.left = None
+            del node
+            return
+        # Case 2: Node is not the root
+        parent = node.parent
+        if parent.left is node:
+            parent.left = None
         else:
-            node.parent.right = None
+            parent.right = None
+        del node
 
     def __delete_one_child_node(self, node: "BinaryTreeNode"):
         """
@@ -188,12 +200,22 @@ class BinarySearchTree(Tree):
                 self.root = node.right
             else:
                 self.root = node.left
+            self.root.make_orphan()
+            del node
+            return
         # Case 2: Node is not the root
         if node.left is None:
             child = node.right
         else:
             child = node.left
-        child.parent = node.parent
+        parent = node.parent
+        # Case 2.1: Node is the left child of its parent
+        if parent.left is node:
+            parent.left = child
+        # Case 2.2: Node is the right child of its parent
+        else:
+            parent.right = child
+        del node
 
     # ----------------------------------------------------------------------- #
     # Traversal
@@ -236,3 +258,12 @@ class BinarySearchTree(Tree):
             self.post_order(node.left, tree)
             self.post_order(node.right, tree)
             tree.append(node.data)
+
+    def __promote_higher_left(self, node):
+        higher = self.__higher_from_left(node)
+        parent = node.parent
+
+        higher.parent = parent
+
+    def __promote_lower_right(self, node):
+        lower = self.__lower_from_right(node)
