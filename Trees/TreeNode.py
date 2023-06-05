@@ -90,17 +90,6 @@ class TreeNode:
         return self.__data != other.data
 
     # ----------------------------------------------------------------------- #
-    # Other methods
-
-    # def add_child(self, node: "TreeNode"):
-    #     """
-    #     Method for adding a child to the node.
-    #     :param node: node to be added as a child.
-    #     """
-    #     assert len(self.children) < self.__max_children, \
-    #         "Number of children must be less than max_children"
-    #     self.__children.append(node)
-    #     self.__children.sort()
 
     def __str__(self):
         return f'- Data: {self.__data} ' \
@@ -109,7 +98,7 @@ class TreeNode:
 
     def make_orphan(self):
         """
-        Private method for making the node an orphan.
+        Method for making the node an orphan.
         """
         parent = self.__parent
         parent.__children.remove(self)
@@ -144,7 +133,7 @@ class BinaryTreeNode(TreeNode):
     @left.setter
     def left(self, node: "BinaryTreeNode"):
         if node is None:
-            self.left.make_orphan()
+            super().make_orphan()
             self.__left = None
             return
         assert self > node, \
@@ -157,7 +146,7 @@ class BinaryTreeNode(TreeNode):
     @right.setter
     def right(self, node: "BinaryTreeNode"):
         if node is None:
-            self.right.make_orphan()
+            super().make_orphan()
             self.__right = None
             return
         assert self < node, \
@@ -169,24 +158,16 @@ class BinaryTreeNode(TreeNode):
 
     # ----------------------------------------------------------------------- #
     # Other methods
-    # def add_child(self, node: "BinaryTreeNode"):
-    #     if node == self:
-    #         return
-    #     try:
-    #         if node < self:
-    #             if self.left is not None:
-    #                 raise LeftNodeAlreadySet
-    #             else:
-    #                 self.left = node
-    #         else:
-    #             if self.right is not None:
-    #                 raise RightNodeAlreadySet
-    #             else:
-    #                 self.right = node
-    #     except (LeftNodeAlreadySet, RightNodeAlreadySet) as e:
-    #         raise e
-    #     else:
-    #         super().add_child(node)
+
+    def make_orphan(self):
+        """
+        Method for making the node an orphan.
+        """
+        if self.parent.__left is self:
+            self.parent.__left = None
+        else:
+            self.parent.__right = None
+        super().make_orphan()
 
     def __str__(self):
         return f'- Data: {self.data} ' \

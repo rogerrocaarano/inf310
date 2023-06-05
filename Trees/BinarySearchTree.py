@@ -56,7 +56,7 @@ class BinarySearchTree(Tree):
         return node.left is None or node.right is None
 
     @staticmethod
-    def __higher_from_left(root: "BinaryTreeNode"):
+    def higher_from_left(root: "BinaryTreeNode"):
         """
         Private method for getting the highest node in the left subtree.
         :param root: Root of the subtree.
@@ -71,7 +71,7 @@ class BinarySearchTree(Tree):
         return higher
 
     @staticmethod
-    def __lower_from_right(root: "BinaryTreeNode"):
+    def lower_from_right(root: "BinaryTreeNode"):
         """
         Private method for getting the lowest node in the right subtree.
         :param root: Root of the subtree.
@@ -196,6 +196,7 @@ class BinarySearchTree(Tree):
         """
         # Case 1: Node is the root
         if self.root is node:
+            # Switch the root
             if node.left is None:
                 self.root = node.right
             else:
@@ -208,14 +209,18 @@ class BinarySearchTree(Tree):
             child = node.right
         else:
             child = node.left
+
+        # Detach Nodes:
         parent = node.parent
-        # Case 2.1: Node is the left child of its parent
-        if parent.left is node:
+        node.make_orphan()
+        child.make_orphan()
+        del node
+
+        # Attach child to its new parent
+        if parent > child:
             parent.left = child
-        # Case 2.2: Node is the right child of its parent
         else:
             parent.right = child
-        del node
 
     # ----------------------------------------------------------------------- #
     # Traversal
@@ -260,10 +265,23 @@ class BinarySearchTree(Tree):
             tree.append(node.data)
 
     def __promote_higher_left(self, node):
-        higher = self.__higher_from_left(node)
-        parent = node.parent
+        # Get needed nodes
+        higher = self.higher_from_left(node)
+        left = node.left
+        right = node.right
 
-        higher.parent = parent
+        # Case node is the root
+        if node is self.root:
+            self.root = higher
+
+        # Detach nodes
+        higher.make_orphan()
+        left.make_orphan()
+        right.make_orphan()
+        del node
+
+        higher.right = right
+        higher.left = left
 
     def __promote_lower_right(self, node):
-        lower = self.__lower_from_right(node)
+        lower = self.lower_from_right(node)
