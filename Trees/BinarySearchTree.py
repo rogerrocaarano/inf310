@@ -85,6 +85,32 @@ class BinarySearchTree(Tree):
             lower = lower.left
         return lower
 
+    def __promote_higher_left(self, node):
+        """
+        Private method for promoting the highest node in the left subtree.
+        :param node: Node to be promoted.
+        """
+        # Get needed nodes
+        higher = self.higher_from_left(node)
+        left = node.left
+        right = node.right
+
+        # Case node is the root
+        if node is self.root:
+            self.root = higher
+
+        # Detach nodes
+        higher.make_orphan()
+        left.make_orphan()
+        right.make_orphan()
+        del node
+
+        higher.right = right
+        higher.left = left
+
+    def __promote_lower_right(self, node):
+        lower = self.lower_from_right(node)
+
     # ----------------------------------------------------------------------- #
     # Searching
 
@@ -152,7 +178,16 @@ class BinarySearchTree(Tree):
             else:
                 self.__insert(root.right, node)
 
+    # ----------------------------------------------------------------------- #
+    # Delete
     def delete(self, value, promote: str = "higher-left"):
+        """
+        Public method for deleting a node from the tree.
+        :param value: Value to be deleted.
+        :param promote: Method for promoting a node when deleting a node with
+        two children. Choose between "higher-left" or "lower-right", default
+        is "higher-left".
+        """
         node = self.__search(self.root, value)
         # Case 1: Value not found
         if node is None:
@@ -264,24 +299,56 @@ class BinarySearchTree(Tree):
             self.post_order(node.right, tree)
             tree.append(node.data)
 
-    def __promote_higher_left(self, node):
-        # Get needed nodes
-        higher = self.higher_from_left(node)
-        left = node.left
-        right = node.right
+    # ----------------------------------------------------------------------- #
+    # Balance
+    # A BST is balanced if the height of the left and right subtrees of every
+    # node differ by at most 1.
+    #
+    # Traverse given BST in inorder and store result in an array. Note that
+    # this array would be sorted as inorder.
+    # Build a balanced BST from the above created sorted array using a
+    # recursive approach. This step also takes O(n) time as we traverse every
+    # element exactly once and processing an element takes O(1) time.
 
-        # Case node is the root
-        if node is self.root:
-            self.root = higher
+    def balance(self):
+        """
+        Public method for balancing the tree.
+        :return:
+        """
+        # Get the balanced tree
+        balanced_tree = self.get_balanced_tree()
+        # Delete the current tree
+        self.root = None
+        # Insert the balanced tree
+        for node in balanced_tree:
+            self.insert(node)
 
-        # Detach nodes
-        higher.make_orphan()
-        left.make_orphan()
-        right.make_orphan()
-        del node
+    def get_balanced_tree(self):
+        """
+        Public method for getting a balanced tree.
+        :return:
+        """
+        # Get the inorder tree
+        inorder_tree = []
+        self.in_order(self.root, inorder_tree)
+        # Get the balanced tree
+        balanced_tree = []
+        BinarySearchTree.__get_balanced_tree(inorder_tree, balanced_tree)
+        # Return the balanced tree
+        return balanced_tree
 
-        higher.right = right
-        higher.left = left
-
-    def __promote_lower_right(self, node):
-        lower = self.lower_from_right(node)
+    @staticmethod
+    def __get_balanced_tree(inorder_tree: list[BinaryTreeNode],
+                            balanced_tree: list[BinaryTreeNode]):
+        # Base case:
+        if len(inorder_tree) < 3:
+            inorder_tree.reverse()
+            balanced_tree.extend(inorder_tree)
+            return balanced_tree
+        # Recursive case:
+        root_pos = len(inorder_tree) // 2
+        balanced_tree.append(inorder_tree[root_pos])
+        left_tree = inorder_tree[:root_pos]
+        right_tree = inorder_tree[root_pos + 1:]
+        BinarySearchTree.__get_balanced_tree(left_tree, balanced_tree)
+        BinarySearchTree.__get_balanced_tree(right_tree, balanced_tree)
