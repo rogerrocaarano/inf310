@@ -3,7 +3,7 @@ from Trees.BinarySearchTree import BinarySearchTree
 
 
 class TestBinarySearchTree(unittest.TestCase):
-    def test_inorder_traversal(self):
+    def test1_inorder_traversal(self):
         tree_array = [100, 50, 150, 180, 200, 10, 60, 5, 20, 80, 110, 300, 350]
         tree = BinarySearchTree(tree_array)
         ordered_tree = list()
@@ -12,7 +12,7 @@ class TestBinarySearchTree(unittest.TestCase):
                          "[5, 10, 20, 50, 60, 80, 100, 110, 150, 180, 200,"
                          " 300, 350]")
 
-    def test_preorder_traversal(self):
+    def test2_preorder_traversal(self):
         tree_array = [100, 50, 150, 180, 200, 10, 60, 5, 20, 80, 110, 300, 350]
         tree = BinarySearchTree(tree_array)
         ordered_tree = list()
@@ -21,7 +21,7 @@ class TestBinarySearchTree(unittest.TestCase):
                          "[100, 50, 10, 5, 20, 60, 80, 150, 110, 180, 200,"
                          " 300, 350]")
 
-    def test_postorder_traversal(self):
+    def test3_postorder_traversal(self):
         tree_array = [100, 50, 150, 180, 200, 10, 60, 5, 20, 80, 110, 300, 350]
         tree = BinarySearchTree(tree_array)
         ordered_tree = list()
@@ -29,7 +29,7 @@ class TestBinarySearchTree(unittest.TestCase):
         result = [5, 20, 10, 80, 60, 50, 110, 350, 300, 200, 180, 150, 100]
         self.assertEqual(result, ordered_tree)  # Root
 
-    def test_delete_case1(self):
+    def test4_delete_case1(self):
         """
         Test for deleting a leaf node.
         """
@@ -40,7 +40,7 @@ class TestBinarySearchTree(unittest.TestCase):
         tree.in_order(tree.root, ordered_tree)
         self.assertEqual("[50, 100, 200]", ordered_tree.__str__())
 
-    def test_delete_case2(self):
+    def test5_delete_case2(self):
         """
         Test for deleting the root node with one child.
         """
@@ -51,7 +51,7 @@ class TestBinarySearchTree(unittest.TestCase):
         tree.in_order(tree.root, ordered_tree)
         self.assertEqual("[50]", ordered_tree.__str__())
 
-    def test_delete_case3(self):
+    def test6_delete_case3(self):
         """
         Test for deleting a node with one child.
         """
@@ -62,7 +62,7 @@ class TestBinarySearchTree(unittest.TestCase):
         tree.in_order(tree.root, ordered_tree)
         self.assertEqual("[50, 100, 150]", ordered_tree.__str__())
 
-    def test_higher_from_left(self):
+    def test7_higher_from_left(self):
         """
         Test for getting the highest node in the left subtree.
         """
@@ -71,7 +71,7 @@ class TestBinarySearchTree(unittest.TestCase):
         node = tree.higher_from_left(tree.root)
         self.assertEqual(60, node.data)
 
-    def test_lower_from_right(self):
+    def test8_lower_from_right(self):
         """
         Test for getting the lowest node in the right subtree.
         """
@@ -80,7 +80,7 @@ class TestBinarySearchTree(unittest.TestCase):
         node = tree.lower_from_right(tree.root)
         self.assertEqual(150, node.data)
 
-    def test_delete_case4(self):
+    def test9_delete_case4(self):
         """
         Test for deleting a node with two children
         :return:

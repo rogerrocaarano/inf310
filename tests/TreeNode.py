@@ -1,5 +1,5 @@
 import unittest
-from Trees.TreeNode import BinaryTreeNode
+from Trees.BinaryTreeNode import *
 
 
 class TestTreeNode(unittest.TestCase):
@@ -46,7 +46,7 @@ class TestTreeNode(unittest.TestCase):
             node1.right = node2
 
     def test_BinaryTreeNode_case4(self):
-        """"
+        """
         Test setting left node twice.
         :return:
         """
@@ -59,7 +59,7 @@ class TestTreeNode(unittest.TestCase):
 
         self.assertEqual(node1.left, node3)
         self.assertEqual(node2.parent, None)
-        self.assertEqual(len(node1.children), 1)
+        self.assertEqual(1, node1.children)
 
     def test_BinaryTreeNode_case5(self):
         """"
@@ -75,7 +75,7 @@ class TestTreeNode(unittest.TestCase):
 
         self.assertEqual(node1.right, node3)
         self.assertEqual(node2.parent, None)
-        self.assertEqual(len(node1.children), 1)
+        self.assertEqual(node1.children, 1)
 
 
 if __name__ == '__main__':
