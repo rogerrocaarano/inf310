@@ -1,14 +1,29 @@
-from Trees.Tree import Tree
-from Trees.TreeNode import BinaryTreeNode
-from Trees.Exceptions import *
+from src.BinaryTreeNode import *
+from src.Exceptions import *
 
 
-class BinarySearchTree(Tree):
+class BinarySearchTree:
     def __init__(self, tree_array: list = None):
-        super().__init__()
+        self.__root = None
+        self.__deep = 0
         if tree_array is not None:
             for value in tree_array:
                 self.insert(value)
+
+    # ----------------------------------------------------------------------- #
+    # Getters and setters
+
+    @property
+    def root(self):
+        return self.__root
+
+    @property
+    def deep(self):
+        return self.__deep
+
+    @root.setter
+    def root(self, node: "BinaryTreeNode"):
+        self.__root = node
 
     # ----------------------------------------------------------------------- #
     # Utility methods
@@ -193,9 +208,9 @@ class BinarySearchTree(Tree):
         if node is None:
             return
         # Case 2: Node is a leaf
-        if len(node.children) == 0:
+        if node.children == 0:
             self.__delete_leaf_node(node)
-        elif len(node.children) == 1:
+        elif node.children == 1:
             self.__delete_one_child_node(node)
         # Case 4: Node has two children
         else:
