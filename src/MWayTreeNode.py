@@ -6,14 +6,14 @@ class MWayTreeNode:
                  values,
                  paths: int = 3,
                  parent: "MWayTreeNode" = None,
-                 parent_pointer_pos=None
+                 child_pos: int = -1
                  ):
         """
         Constructor for MWayTreeNode.
         :param values: Values to insert into the node on creation.
         :param paths: Number of paths the node can have.
         :param parent: Parent node.
-        :param parent_pointer_pos: Pointer position in parent node.
+        :param child_pos: Pointer position in parent node.
         """
         # Values must be a list, containing values to insert into the node
         # and the length of values list must be less than paths.
@@ -32,7 +32,7 @@ class MWayTreeNode:
         if parent is None:
             self.__parent = None
         else:
-            parent.insert_child(self, parent_pointer_pos)
+            parent.insert_child(self, child_pos)
 
     # Getter methods
 
@@ -129,7 +129,7 @@ class MWayTreeNode:
         return self.min <= value <= self.max
 
     @staticmethod
-    def __value_pos_to_data_pos(value_pos):
+    def value_pos_to_data_pos(value_pos):
         """
         Converts a value position to a data position.
         :param value_pos: Value position.
@@ -151,7 +151,7 @@ class MWayTreeNode:
         :param value_pos: Position of the value.
         :return: Value in value_pos.
         """
-        data_pos = self.__value_pos_to_data_pos(value_pos)
+        data_pos = self.value_pos_to_data_pos(value_pos)
         return self.__data[data_pos]
 
     def get_value_pos(self, value):
@@ -167,10 +167,17 @@ class MWayTreeNode:
 
     def get_value_insertion_pos(self, value):
         """
-        Searches for the position to insert a value.
+        Searches for the position to insert a value, if value is in range of a
+        child node, returns the child node.
         :param value: Value to insert.
-        :return: Value position if found, None otherwise.
+        :return: A value position for inserting the value on the node, or the
+        node than value is in range.
         """
+        for pos in range(0, len(self.__data), 2):
+            child_node: MWayTreeNode = self.__data[pos]
+            if child_node is not None and child_node.in_range(value):
+                return child_node
+
         if self.min > value:
             return 0
         elif self.max < value:
@@ -199,7 +206,7 @@ class MWayTreeNode:
         # data_pos inclusive to the right.
         else:
             # Convert value_pos to data_pos and insert value.
-            data_pos = self.__value_pos_to_data_pos(value_pos)
+            data_pos = self.value_pos_to_data_pos(value_pos)
             self.__data = \
                 self.__data[0:data_pos + 1] \
                 + [value, None] \
@@ -232,17 +239,11 @@ class MWayTreeNode:
             raise Exceptions.NodeValueAlreadyExists
         # search the position to insert the value.
         value_pos = self.get_value_insertion_pos(value)
-        self.insert_value_pos(value, value_pos)
+        if type(value_pos) is MWayTreeNode:
+            raise Exceptions.ValueInChildNodeRange(value_pos)
+        else:
+            self.insert_value_pos(value, value_pos)
 
-    def insert_child(self, node: "MWayTreeNode", pointer_pos):
-        data_pos = self.__pointer_pos_to_data_pos(pointer_pos)
+    def insert_child(self, node: "MWayTreeNode", data_pos):
         self.__data[data_pos] = node
         node.__parent = self
-
-    def previous_child(self, value_pos):
-        data_pos = self.__value_pos_to_data_pos(value_pos)
-        return self.__data[data_pos - 1]
-
-    def next_child(self, value_pos):
-        data_pos = self.__value_pos_to_data_pos(value_pos)
-        return self.__data[data_pos + 1]
