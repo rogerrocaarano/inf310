@@ -82,6 +82,28 @@ class TestMWayTree(unittest.TestCase):
         self.assertEqual(170, node_170.get_value(0))
         self.assertEqual(56, node_56.get_value(0))
 
+    def test7(self):
+        """
+        Test search(value) method.
+        :return:
+        """
+        tree_array = [50, 100, 150, 23, 25, 30, 55, 60, 70, 56, 170]
+        tree = NWayTree(tree_array, paths=4)
+
+        node1: Node = tree.root
+        node2: Node = tree.root.data[0]
+        node3: Node = tree.root.data[2]
+        node4: Node = tree.root.data[6]
+        node5: Node = node3.data[2]
+
+        self.assertEqual([node1, 1], tree.search(100))
+        self.assertEqual([node2, 2], tree.search(30))
+        self.assertEqual([node3, 0], tree.search(55))
+        self.assertEqual([node4, 0], tree.search(170))
+        self.assertEqual([node5, 0], tree.search(56))
+        self.assertEqual([node3, None], tree.search(61))
+        self.assertEqual([node3, None], tree.search(53))
+
 
 if __name__ == '__main__':
     unittest.main()
