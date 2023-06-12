@@ -8,7 +8,7 @@ class TestMWayTree(unittest.TestCase):
         Test tree constructor.
         :return:
         """
-        tree = NWayTree(paths=3)
+        tree = MWayTree(paths=3)
 
         self.assertEqual(None, tree.root)
         self.assertEqual(3, tree.paths)
@@ -18,7 +18,7 @@ class TestMWayTree(unittest.TestCase):
         Test inserting data to a tree
         :return:
         """
-        tree = NWayTree(paths=3)
+        tree = MWayTree(paths=3)
         tree.insert(10)
 
         self.assertEqual(10, tree.root.data[1])
@@ -29,7 +29,7 @@ class TestMWayTree(unittest.TestCase):
         Test inserting data to a tree
         :return:
         """
-        tree = NWayTree(paths=3)
+        tree = MWayTree(paths=3)
         tree.insert(10)
         tree.insert(5)
 
@@ -43,7 +43,7 @@ class TestMWayTree(unittest.TestCase):
         :return:
         """
         tree_array = [100, 50, 150, 25]
-        tree = NWayTree(tree_array, paths=5)
+        tree = MWayTree(tree_array, paths=5)
 
         self.assertEqual(25, tree.root.get_value(0))
         self.assertEqual(50, tree.root.get_value(1))
@@ -57,7 +57,7 @@ class TestMWayTree(unittest.TestCase):
         :return:
         """
         tree_array = [100, 50, 150, 25, 110]
-        tree = NWayTree(tree_array, paths=4)
+        tree = MWayTree(tree_array, paths=4)
 
         self.assertEqual(50, tree.root.get_value(0))
         node_25 = tree.root.data[0]
@@ -71,7 +71,7 @@ class TestMWayTree(unittest.TestCase):
         :return:
         """
         tree_array = [50, 100, 150, 23, 25, 30, 55, 60, 70, 56, 170]
-        tree = NWayTree(tree_array, paths=4)
+        tree = MWayTree(tree_array, paths=4)
 
         node_60 = tree.root.data[2]
         node_170 = tree.root.data[6]
@@ -88,7 +88,7 @@ class TestMWayTree(unittest.TestCase):
         :return:
         """
         tree_array = [50, 100, 150, 23, 25, 30, 55, 60, 70, 56, 170]
-        tree = NWayTree(tree_array, paths=4)
+        tree = MWayTree(tree_array, paths=4)
 
         node1: Node = tree.root
         node2: Node = tree.root.data[0]

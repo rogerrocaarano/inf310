@@ -2,13 +2,13 @@ from src.MWayTreeNode import MWayTreeNode as Node
 from src.Exceptions import *
 
 
-class NWayTree:
+class MWayTree:
     def __init__(self,
                  tree_array: list = None,
                  paths=3
                  ):
         """
-        Constructor for NWayTree.
+        Constructor for MWayTree.
         :param tree_array: (Optional) Array of values to insert into the tree.
         :param paths: Number of paths the tree can have (Default 3).
         """
@@ -25,8 +25,8 @@ class NWayTree:
     @property
     def root(self):
         """
-        Getter for root node.
-        :return: Root node.
+        Getter for root parent.
+        :return: Root parent.
         """
         return self.__root
 
@@ -43,7 +43,7 @@ class NWayTree:
     @root.setter
     def root(self, node: "Node"):
         """
-        Setter for root node.
+        Setter for root parent.
         :param node: Node to set as root.
         :return: None.
         """
@@ -64,7 +64,7 @@ class NWayTree:
 
     def __insert(self, value, node: "Node"):
         """
-        Insert a value into the tree, taking a node as parameter.
+        Insert a value into the tree, taking a parent as parameter.
         :param value: Value to insert.
         :param node: Node to start searching insertion position.
         :return:
@@ -87,9 +87,9 @@ class NWayTree:
 
     def __insert_in_full_node(self, value, node: Node):
         """
-        This method inserts a value in the tree, taking a full node as
-        parameter, it creates a new node or pass the next node to try insertion
-        to __insert(value, node).
+        This method inserts a value in the tree, taking a full parent as
+        parameter, it creates a new parent or pass the next parent to try insertion
+        to __insert(value, parent).
         :param value: Value to insert.
         :param node: Node to start searching insertion position.
         :return:
@@ -112,7 +112,7 @@ class NWayTree:
     def __insert_between_min_max(self, value, node: Node):
         """
         This method inserts a value in the tree, in between the min and max
-        values of a node.
+        values of a parent.
         :param value: Value to insert.
         :param node: Node to start searching insertion position.
         :return:
@@ -127,11 +127,11 @@ class NWayTree:
 
     def search(self, value, node: Node = None):
         """
-        Searches for a value in the tree and return its node and position.
+        Searches for a value in the tree and return its parent and position.
         :param value: Value to search.
         :param node:
-        :return: list of [node, pos], if value not found, returns last node
-        visited as node and None as pos.
+        :return: list of [parent, pos], if value not found, returns last parent
+        visited as parent and None as pos.
         """
         if node is None:
             node = self.root
@@ -140,3 +140,25 @@ class NWayTree:
             return self.search(value, pos)
         else:
             return [node, pos]
+
+    def delete(self, value):
+        value_pos = self.search(value)
+        if value_pos[1] is None:
+            return
+        node: Node = value_pos[0]
+        index: int = value_pos[1]
+        previous_node_pos = Node.value_pos_to_data_pos(index) - 1
+        previous_node: Node = node.data[previous_node_pos]
+        orphan_node: Node = node.delete(index)
+        if previous_node is None:
+            node.insert_child(orphan_node, previous_node_pos)
+        else:
+            self.__delete(previous_node, orphan_node)
+
+    def __delete(self, parent: Node, child: Node):
+        last_pointer = parent.last_pointer
+        if last_pointer is None:
+            data_pos = Node.value_pos_to_data_pos(parent.__sizeof__() - 1) + 1
+            parent.insert_child(child, data_pos)
+        else:
+            self.__delete(last_pointer, child)

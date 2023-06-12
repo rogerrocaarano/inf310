@@ -31,7 +31,7 @@ class TestBinarySearchTree(unittest.TestCase):
 
     def test4_delete_case1(self):
         """
-        Test for deleting a leaf node.
+        Test for deleting a leaf parent.
         """
         tree_array = [100, 50, 200, 30]
         tree = BinarySearchTree(tree_array)
@@ -42,7 +42,7 @@ class TestBinarySearchTree(unittest.TestCase):
 
     def test5_delete_case2(self):
         """
-        Test for deleting the root node with one child.
+        Test for deleting the root parent with one child.
         """
         tree_array = [100, 50]
         tree = BinarySearchTree(tree_array)
@@ -53,7 +53,7 @@ class TestBinarySearchTree(unittest.TestCase):
 
     def test6_delete_case3(self):
         """
-        Test for deleting a node with one child.
+        Test for deleting a parent with one child.
         """
         tree_array = [100, 50, 200, 150]
         tree = BinarySearchTree(tree_array)
@@ -64,7 +64,7 @@ class TestBinarySearchTree(unittest.TestCase):
 
     def test7_higher_from_left(self):
         """
-        Test for getting the highest node in the left subtree.
+        Test for getting the highest parent in the left subtree.
         """
         tree_array = [100, 50, 200, 150, 250, 25, 60]
         tree = BinarySearchTree(tree_array)
@@ -73,7 +73,7 @@ class TestBinarySearchTree(unittest.TestCase):
 
     def test8_lower_from_right(self):
         """
-        Test for getting the lowest node in the right subtree.
+        Test for getting the lowest parent in the right subtree.
         """
         tree_array = [100, 50, 200, 150, 250, 25, 60]
         tree = BinarySearchTree(tree_array)
@@ -82,7 +82,7 @@ class TestBinarySearchTree(unittest.TestCase):
 
     def test9_delete_case4(self):
         """
-        Test for deleting a node with two children
+        Test for deleting a parent with two children
         :return:
         """
         tree_array = [100, 50, 200, 150, 250, 25, 60]
