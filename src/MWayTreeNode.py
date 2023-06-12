@@ -255,3 +255,23 @@ class MWayTreeNode:
         """
         self.__data[data_pos] = node
         node.__parent = self
+
+    def search(self, value, pos: int = 0):
+        """
+        Search a value in the node.
+        :param value: Value to search.
+        :param pos: Position to start searching.
+        :return: The position where the value is, or the next node to search.
+        """
+        current_value = self.get_value(pos)
+        data_pos = self.value_pos_to_data_pos(pos)
+        if current_value == value:
+            return pos
+        elif pos == 0 and current_value > value:
+            return self.__data[data_pos - 1]
+        elif pos == self.__sizeof__() - 1 and current_value < value:
+            return self.__data[data_pos + 1]
+        elif current_value < value < self.get_value(pos + 1):
+            return self.__data[data_pos + 1]
+        else:
+            return self.search(value, pos + 1)

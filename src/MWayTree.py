@@ -124,3 +124,19 @@ class NWayTree:
                     Node(value, self.paths, node, child_pos)
                 else:
                     self.__insert(value, node.data[child_pos])
+
+    def search(self, value, node: Node = None):
+        """
+        Searches for a value in the tree and return its node and position.
+        :param value: Value to search.
+        :param node:
+        :return: list of [node, pos], if value not found, returns last node
+        visited as node and None as pos.
+        """
+        if node is None:
+            node = self.root
+        pos = node.search(value)
+        if type(pos) is Node:
+            return self.search(value, pos)
+        else:
+            return [node, pos]
