@@ -63,25 +63,41 @@ class NWayTree:
             self.__insert(value, self.root)
 
     def __insert(self, value, node: "Node"):
-        if node.in_range(value):
+        if node.in_range(value) and not node.is_full:
             try:
                 node.insert_value(value)
             except NodeValueAlreadyExists:
                 return
             except ValueInChildNodeRange as e:
                 self.__insert(value, e.node)
+            except InvalidValue:
+                self.__insert_between_min_max(value, node)
             else:
                 return
         else:
             if node.is_full:
                 if value < node.min:
-                    Node(value, self.paths, node, node.first_pointer)
+                    if node.first_pointer is None:
+                        Node(value, self.paths, node, 0)
+                    else:
+                        self.__insert(value, node.first_pointer)
                 elif value > node.max:
-                    Node(value, self.paths, node, node.last_pointer)
+                    if node.last_pointer is None:
+                        pos = Node.value_pos_to_data_pos(
+                            node.__sizeof__() - 1) + 1
+                        Node(value, self.paths, node, pos)
+                    else:
+                        self.__insert(value, node.last_pointer)
                 else:
-                    for i in range(0, node.__sizeof__() - 1):
-                        if node.get_value(i) < value < node.get_value(i + 1):
-                            child_pos = Node.value_pos_to_data_pos(i) + 1
-                            Node(value, self.paths, node, child_pos)
+                    self.__insert_between_min_max(value, node)
             else:
                 node.insert_value(value)
+
+    def __insert_between_min_max(self, value, node: Node):
+        for i in range(0, node.__sizeof__() - 1):
+            if node.get_value(i) < value < node.get_value(i + 1):
+                child_pos = Node.value_pos_to_data_pos(i) + 1
+                if node.data[child_pos] is None:
+                    Node(value, self.paths, node, child_pos)
+                else:
+                    self.__insert(value, node.data[child_pos])

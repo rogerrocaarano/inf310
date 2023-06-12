@@ -241,6 +241,8 @@ class MWayTreeNode:
         value_pos = self.get_value_insertion_pos(value)
         if type(value_pos) is MWayTreeNode:
             raise Exceptions.ValueInChildNodeRange(value_pos)
+        elif value_pos is None:
+            raise Exceptions.InvalidValue
         else:
             self.insert_value_pos(value, value_pos)
 

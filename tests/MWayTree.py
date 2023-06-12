@@ -73,15 +73,14 @@ class TestMWayTree(unittest.TestCase):
         tree_array = [50, 100, 150, 23, 25, 30, 55, 60, 70, 56, 170]
         tree = NWayTree(tree_array, paths=4)
 
-        node_25 = tree.root.data[0]
         node_60 = tree.root.data[2]
         node_170 = tree.root.data[6]
         node_56 = node_60.data[2]
 
         self.assertEqual(50, tree.root.get_value(0))
-        self.assertEqual(60, node_60.value(1))
-        self.assertEqual(170, node_170.value(0))
-        self.assertEqual(56, node_56.value(0))
+        self.assertEqual(60, node_60.get_value(1))
+        self.assertEqual(170, node_170.get_value(0))
+        self.assertEqual(56, node_56.get_value(0))
 
 
 if __name__ == '__main__':

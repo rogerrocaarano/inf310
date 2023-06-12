@@ -22,3 +22,11 @@ class ValueInChildNodeRange(Exception):
         self.message = message
         self.node = node
         super().__init__(self.message)
+
+
+class InvalidValue(Exception):
+    def __init__(self,
+                 message="Invalid value"
+                 ):
+        self.message = message
+        super().__init__(self.message)
