@@ -63,6 +63,12 @@ class NWayTree:
             self.__insert(value, self.root)
 
     def __insert(self, value, node: "Node"):
+        """
+        Insert a value into the tree, taking a node as parameter.
+        :param value: Value to insert.
+        :param node: Node to start searching insertion position.
+        :return:
+        """
         if node.in_range(value) and not node.is_full:
             try:
                 node.insert_value(value)
@@ -74,26 +80,43 @@ class NWayTree:
                 self.__insert_between_min_max(value, node)
             else:
                 return
+        if node.is_full:
+            self.__insert_in_full_node(value, node)
         else:
-            if node.is_full:
-                if value < node.min:
-                    if node.first_pointer is None:
-                        Node(value, self.paths, node, 0)
-                    else:
-                        self.__insert(value, node.first_pointer)
-                elif value > node.max:
-                    if node.last_pointer is None:
-                        pos = Node.value_pos_to_data_pos(
-                            node.__sizeof__() - 1) + 1
-                        Node(value, self.paths, node, pos)
-                    else:
-                        self.__insert(value, node.last_pointer)
-                else:
-                    self.__insert_between_min_max(value, node)
+            node.insert_value(value)
+
+    def __insert_in_full_node(self, value, node: Node):
+        """
+        This method inserts a value in the tree, taking a full node as
+        parameter, it creates a new node or pass the next node to try insertion
+        to __insert(value, node).
+        :param value: Value to insert.
+        :param node: Node to start searching insertion position.
+        :return:
+        """
+        if value < node.min:
+            if node.first_pointer is None:
+                Node(value, self.paths, node, 0)
             else:
-                node.insert_value(value)
+                self.__insert(value, node.first_pointer)
+        elif value > node.max:
+            if node.last_pointer is None:
+                pos = Node.value_pos_to_data_pos(
+                    node.__sizeof__() - 1) + 1
+                Node(value, self.paths, node, pos)
+            else:
+                self.__insert(value, node.last_pointer)
+        else:
+            self.__insert_between_min_max(value, node)
 
     def __insert_between_min_max(self, value, node: Node):
+        """
+        This method inserts a value in the tree, in between the min and max
+        values of a node.
+        :param value: Value to insert.
+        :param node: Node to start searching insertion position.
+        :return:
+        """
         for i in range(0, node.__sizeof__() - 1):
             if node.get_value(i) < value < node.get_value(i + 1):
                 child_pos = Node.value_pos_to_data_pos(i) + 1

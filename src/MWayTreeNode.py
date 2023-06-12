@@ -247,5 +247,11 @@ class MWayTreeNode:
             self.insert_value_pos(value, value_pos)
 
     def insert_child(self, node: "MWayTreeNode", data_pos):
+        """
+        Inserts a child node into a pointer position.
+        :param node: Node to insert as child.
+        :param data_pos: Position to insert the child node into its parent.
+        :return:
+        """
         self.__data[data_pos] = node
         node.__parent = self
