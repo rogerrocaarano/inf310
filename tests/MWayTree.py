@@ -104,6 +104,70 @@ class TestMWayTree(unittest.TestCase):
         self.assertEqual([node3, None], tree.search(61))
         self.assertEqual([node3, None], tree.search(53))
 
+    def test8(self):
+        """
+        Delete a value in a tree with only one node
+        :return:
+        """
+
+        tree_array = [50, 100, 150]
+        tree = MWayTree(tree_array, paths=4)
+        tree.delete(50)
+        node1: Node = tree.root
+        self.assertEqual([node1, 0], tree.search(100))
+        self.assertEqual([node1, 1], tree.search(150))
+
+        tree = MWayTree(tree_array, paths=4)
+        tree.delete(100)
+        node1: Node = tree.root
+        self.assertEqual([node1, 0], tree.search(50))
+        self.assertEqual([node1, 1], tree.search(150))
+
+        tree = MWayTree(tree_array, paths=4)
+        tree.delete(150)
+        node1: Node = tree.root
+        self.assertEqual([node1, 0], tree.search(50))
+        self.assertEqual([node1, 1], tree.search(100))
+
+    def test9(self):
+        """
+        Delete values in a tree with multiple nodes
+        :return:
+        """
+        tree_array = [50, 100, 150, 23, 25, 30, 55, 60, 70, 56, 170]
+        tree = MWayTree(tree_array, paths=4)
+
+        tree.delete(60)
+        test_node: Node = tree.root.data[2]
+        test_node = test_node.data[2]
+        search = tree.search(60)
+        self.assertEqual([test_node, None], search)
+
+        tree = MWayTree(tree_array, paths=4)
+        tree.delete(55)
+        test_node = tree.root.data[2]
+        test_node = test_node.data[0]
+        search = tree.search(53)
+        self.assertEqual([test_node, None], search)
+
+        tree = MWayTree(tree_array, paths=4)
+        tree.delete(100)
+        test_node = tree.root.data[2]
+        search = tree.search(60)
+        self.assertEqual([test_node, 1], search)
+
+        tree = MWayTree(tree_array, paths=4)
+        tree.delete(50)
+        test_node = tree.root.data[0]
+        search = tree.search(25)
+        self.assertEqual([test_node, 1], search)
+        test_node = test_node.data[6]
+        search = tree.search(60)
+        self.assertEqual([test_node, 1], search)
+        test_node = test_node.data[2]
+        search = tree.search(56)
+        self.assertEqual([test_node, 0], search)
+
 
 if __name__ == '__main__':
     unittest.main()

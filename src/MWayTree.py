@@ -88,8 +88,8 @@ class MWayTree:
     def __insert_in_full_node(self, value, node: Node):
         """
         This method inserts a value in the tree, taking a full parent as
-        parameter, it creates a new parent or pass the next parent to try insertion
-        to __insert(value, parent).
+        parameter, it creates a new parent or pass the next parent to try
+        insertion to __insert(value, parent).
         :param value: Value to insert.
         :param node: Node to start searching insertion position.
         :return:
@@ -150,6 +150,8 @@ class MWayTree:
         previous_node_pos = Node.value_pos_to_data_pos(index) - 1
         previous_node: Node = node.data[previous_node_pos]
         orphan_node: Node = node.delete(index)
+        if orphan_node is None:
+            return
         if previous_node is None:
             node.insert_child(orphan_node, previous_node_pos)
         else:
