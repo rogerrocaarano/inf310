@@ -55,27 +55,27 @@ class BinarySearchTree:
     @staticmethod
     def __is_leaf(node: "BinaryTreeNode"):
         """
-        Private method for checking if a node is a leaf.
+        Private method for checking if a parent is a leaf.
         :param node: Node to be checked.
-        :return: True if the node is a leaf, False otherwise.
+        :return: True if the parent is a leaf, False otherwise.
         """
         return node.left is None and node.right is None
 
     @staticmethod
     def __has_one_child(node: "BinaryTreeNode"):
         """
-        Private method for checking if a node has one child.
+        Private method for checking if a parent has one child.
         :param node: Node to be checked.
-        :return: True if the node has one child, False otherwise.
+        :return: True if the parent has one child, False otherwise.
         """
         return node.left is None or node.right is None
 
     @staticmethod
     def higher_from_left(root: "BinaryTreeNode"):
         """
-        Private method for getting the highest node in the left subtree.
+        Private method for getting the highest parent in the left subtree.
         :param root: Root of the subtree.
-        :return: Highest node in the left subtree.
+        :return: Highest parent in the left subtree.
         """
         if root.left is None:
             return root
@@ -88,9 +88,9 @@ class BinarySearchTree:
     @staticmethod
     def lower_from_right(root: "BinaryTreeNode"):
         """
-        Private method for getting the lowest node in the right subtree.
+        Private method for getting the lowest parent in the right subtree.
         :param root: Root of the subtree.
-        :return: Lowest node in the right subtree.
+        :return: Lowest parent in the right subtree.
         """
         if root.right is None:
             return root
@@ -102,7 +102,7 @@ class BinarySearchTree:
 
     def __promote_higher_left(self, node):
         """
-        Private method for promoting the highest node in the left subtree.
+        Private method for promoting the highest parent in the left subtree.
         :param node: Node to be promoted.
         """
         # Get needed nodes
@@ -110,7 +110,7 @@ class BinarySearchTree:
         left = node.left
         right = node.right
 
-        # Case node is the root
+        # Case parent is the root
         if node is self.root:
             self.root = higher
 
@@ -131,7 +131,7 @@ class BinarySearchTree:
 
     def search(self, value):
         """
-        Public method for searching a node in the tree.
+        Public method for searching a parent in the tree.
         :param value: Value to be searched.
         :return: True if the value is found, False otherwise.
         """
@@ -139,8 +139,8 @@ class BinarySearchTree:
 
     def __search(self, root: "BinaryTreeNode", value):
         """
-        Private method for searching a node in the tree.
-        :param root: Starting node for the search.
+        Private method for searching a parent in the tree.
+        :param root: Starting parent for the search.
         :param value: Value to be searched.
         :return: Node with the data searched or None if not found.
         """
@@ -161,7 +161,7 @@ class BinarySearchTree:
 
     def insert(self, value):
         """
-        Public method for inserting a node in the tree.
+        Public method for inserting a parent in the tree.
         :param value: Value to be inserted.
         """
         node = BinaryTreeNode(value)
@@ -174,8 +174,8 @@ class BinarySearchTree:
 
     def __insert(self, root: "BinaryTreeNode", node: "BinaryTreeNode"):
         """
-        Private method for inserting a node in the tree.
-        :param root: Starting node for the insertion.
+        Private method for inserting a parent in the tree.
+        :param root: Starting parent for the insertion.
         :param node: Node to be inserted.
         """
         # Case 1: data already in the tree
@@ -197,9 +197,9 @@ class BinarySearchTree:
     # Delete
     def delete(self, value, promote: str = "higher-left"):
         """
-        Public method for deleting a node from the tree.
+        Public method for deleting a parent from the tree.
         :param value: Value to be deleted.
-        :param promote: Method for promoting a node when deleting a node with
+        :param promote: Method for promoting a parent when deleting a parent with
         two children. Choose between "higher-left" or "lower-right", default
         is "higher-left".
         """
@@ -223,7 +223,7 @@ class BinarySearchTree:
 
     def __delete_leaf_node(self, node: "BinaryTreeNode"):
         """
-        Private method for deleting a leaf node.
+        Private method for deleting a leaf parent.
         :param node: Node to be deleted.
         """
         # Case 1: Node is the root
@@ -241,7 +241,7 @@ class BinarySearchTree:
 
     def __delete_one_child_node(self, node: "BinaryTreeNode"):
         """
-        Private method for deleting a node with one child.
+        Private method for deleting a parent with one child.
         :param node: Node to be deleted.
         """
         # Case 1: Node is the root
@@ -279,7 +279,7 @@ class BinarySearchTree:
     def in_order(self, node: "BinaryTreeNode", tree: "list"):
         """
         Nodes from the left subtree get visited first, followed by the root
-        node and right subtree.
+        parent and right subtree.
         :param node:
         :param tree:
         :return:
@@ -291,7 +291,7 @@ class BinarySearchTree:
 
     def pre_order(self, node: "BinaryTreeNode", tree: "list"):
         """
-        The root node gets visited first, followed by left and right subtrees.
+        The root parent gets visited first, followed by left and right subtrees.
         :param node:
         :param tree:
         :return:
@@ -317,7 +317,7 @@ class BinarySearchTree:
     # ----------------------------------------------------------------------- #
     # Balance
     # A BST is balanced if the height of the left and right subtrees of every
-    # node differ by at most 1.
+    # parent differ by at most 1.
     #
     # Traverse given BST in inorder and store result in an array. Note that
     # this array would be sorted as inorder.

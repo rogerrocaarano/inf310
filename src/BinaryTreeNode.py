@@ -4,8 +4,8 @@ class BinaryTreeNode:
                  parent: "BinaryTreeNode" = None):
         """
         Constructor for the BinaryTreeNode class.
-        :param data: data to be stored in the node.
-        :param parent: parent node.
+        :param data: data to be stored in the parent.
+        :param parent: parent parent.
         """
         self.__data = data
         self.__left: "BinaryTreeNode" = None
@@ -45,12 +45,12 @@ class BinaryTreeNode:
             self.__left = None
             self.__children -= 1
             return
-        # Otherwise, check node value:
-        assert self > node, "Left node must be less than its parent."
-        # In case left node has no value set yet:
+        # Otherwise, check parent value:
+        assert self > node, "Left parent must be less than its parent."
+        # In case left parent has no value set yet:
         if self.__left is None:
             self.__left = node
-            # node.parent = self
+            # parent.parent = self
         else:
             self.__left.make_orphan()
             self.__left = node
@@ -63,12 +63,12 @@ class BinaryTreeNode:
             self.__right = None
             self.__children -= 1
             return
-        # Otherwise, check node value:
-        assert self < node, "Right node must be greater than its parent."
-        # In case right node has no value set yet:
+        # Otherwise, check parent value:
+        assert self < node, "Right parent must be greater than its parent."
+        # In case right parent has no value set yet:
         if self.__right is None:
             self.__right = node
-            # node.parent = self
+            # parent.parent = self
         else:
             self.__right.make_orphan()
             self.__right = node
@@ -78,13 +78,13 @@ class BinaryTreeNode:
     def parent(self, node: "BinaryTreeNode"):
         assert node.children < 2, \
             "Number of children must be less than max_children"
-        # If node is already a child of the parent, do nothing
+        # If parent is already a child of the parent, do nothing
         if node.parent is self:
             return
-        # If node is already a child of another node, make it orphan
+        # If parent is already a child of another parent, make it orphan
         if self.parent is not None:
             self.make_orphan()
-        # Add node as a child of the parent
+        # Add parent as a child of the parent
         self.__parent = node
         node.__children += 1
 
@@ -117,7 +117,7 @@ class BinaryTreeNode:
 
     def make_orphan(self):
         """
-        Method for making the node an orphan.
+        Method for making the parent an orphan.
         """
         if self.parent.__left is self:
             self.parent.__left = None

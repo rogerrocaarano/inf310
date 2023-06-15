@@ -8,7 +8,7 @@ class TestBinaryTreeNode(unittest.TestCase):
         Test for BinaryTreeNode class.
         :return:
         """
-        # Sample node data:
+        # Sample parent data:
         node1 = BinaryTreeNode(10)
         node2 = BinaryTreeNode(5)
         node3 = BinaryTreeNode(15)
@@ -16,16 +16,16 @@ class TestBinaryTreeNode(unittest.TestCase):
         node1.left = node2
         node1.right = node3
 
-        # Node 2 and 3 parent should be node 1
+        # Node 2 and 3 parent should be parent 1
         self.assertEqual(node2.parent, node1)
         self.assertEqual(node3.parent, node1)
-        # Node 1 left and right should be node 2 and 3 respectively
+        # Node 1 left and right should be parent 2 and 3 respectively
         self.assertEqual(node1.left, node2)
         self.assertEqual(node1.right, node3)
 
     def test_BinaryTreeNode_case2(self):
         """
-        Test setting left node with value more than parent.
+        Test setting left parent with value more than parent.
         :return:
         """
         node1 = BinaryTreeNode(10)
@@ -36,7 +36,7 @@ class TestBinaryTreeNode(unittest.TestCase):
 
     def test_BinaryTreeNode_case3(self):
         """
-        Test setting right node with value less than parent.
+        Test setting right parent with value less than parent.
         :return:
         """
         node1 = BinaryTreeNode(10)
@@ -47,7 +47,7 @@ class TestBinaryTreeNode(unittest.TestCase):
 
     def test_BinaryTreeNode_case4(self):
         """
-        Test setting left node twice.
+        Test setting left parent twice.
         :return:
         """
         node1 = BinaryTreeNode(10)
@@ -63,7 +63,7 @@ class TestBinaryTreeNode(unittest.TestCase):
 
     def test_BinaryTreeNode_case5(self):
         """
-        Test setting right node twice.
+        Test setting right parent twice.
         :return:
         """
         node1 = BinaryTreeNode(10)

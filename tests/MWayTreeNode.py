@@ -5,7 +5,7 @@ from src.MWayTreeNode import *
 class TestMWayTreeNode(unittest.TestCase):
     def test1(self):
         """
-        Test node constructor.
+        Test parent constructor.
         :return:
         """
         node = MWayTreeNode(10, 3)
@@ -22,7 +22,7 @@ class TestMWayTreeNode(unittest.TestCase):
 
     def test2(self):
         """
-        Test inserting data to a node
+        Test inserting data to a parent
         :return:
         """
         node = MWayTreeNode(10, 3)
@@ -33,7 +33,7 @@ class TestMWayTreeNode(unittest.TestCase):
 
     def test3(self):
         """
-        Test inserting data to a node
+        Test inserting data to a parent
         :return:
         """
         node = MWayTreeNode(10, 3)
@@ -44,7 +44,7 @@ class TestMWayTreeNode(unittest.TestCase):
 
     def test4(self):
         """
-        Insert data to a node
+        Insert data to a parent
         :return:
         """
         node = MWayTreeNode(10, 4)
