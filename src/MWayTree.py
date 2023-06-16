@@ -20,7 +20,13 @@ class MWayTree:
             for value in tree_array:
                 self.insert(value)
 
-    # Getter methods
+    """
+    An MWayTree is a tree where each node can have a maximum of m children 
+    or paths.
+    The values in the tree are sorted, and each node has a minimum and maximum
+    value. The minimum value of a node is the minimum value of its first child,
+    and the maximum value of a node is the maximum value of its last child.
+    """
 
     @property
     def root(self):
@@ -48,6 +54,13 @@ class MWayTree:
         :return: None.
         """
         self.__root = node
+
+    """
+    A M-Way Tree has the following basic methods:
+    - Insert
+    - Search
+    - Delete
+    """
 
     def insert(self, value):
         """

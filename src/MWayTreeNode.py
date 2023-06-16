@@ -10,12 +10,12 @@ class MWayTreeNode:
                  ):
         """
         Constructor for MWayTreeNode.
-        :param values: Values to insert into the parent on creation.
-        :param paths: Number of paths the parent can have.
-        :param parent: Parent parent.
-        :param child_pos: Pointer position in parent parent.
+        :param values: Values to insert into the node on creation.
+        :param paths: Number of paths the node can have.
+        :param parent: Parent node.
+        :param child_pos: Pointer position on the parent node.
         """
-        # Values must be a list, containing values to insert into the parent
+        # Values must be a list, containing values to insert into the node
         # and the length of values list must be less than paths.
         if type(values) is not list:
             values = [values]
@@ -28,13 +28,20 @@ class MWayTreeNode:
         for value in values:
             self.__data += [value, None]
         self.__paths = paths
-        # If parent parameter is passed, insert the parent into the parent.
+        # If parent parameter is passed, insert the parent into the node.
         if parent is None:
             self.__parent = None
         else:
             parent.insert_child(self, child_pos)
 
-    # Getter methods
+    """
+    An m-way tree node is a node that can have up to m children.
+    - The node contains values and pointers to child nodes.
+    - The values are sorted in ascending order.
+    For this implementation, the values will be stored in a list, where the
+    pointers to child nodes will be in the even positions, and the values will
+    be in the odd positions.        
+    """
 
     @property
     def data(self):
@@ -48,8 +55,8 @@ class MWayTreeNode:
     @property
     def parent(self):
         """
-        Getter for parent parent.
-        :return: Parent parent.
+        Getter for parent of the current node.
+        :return: Parent of the node.
         """
         return self.__parent
 
@@ -64,23 +71,23 @@ class MWayTreeNode:
     @property
     def first_pointer(self):
         """
-        Getter for first pointer of parent.
-        :return: First pointer. None if there are no pointers.
+        Getter for first pointer of the node.
+        :return: First pointer. None if there isn't a node referenced.
         """
         return self.__data[0]
 
     @property
     def last_pointer(self):
         """
-        Getter for last pointer of parent.
-        :return: Last pointer. None if there are no pointers.
+        Getter for last pointer of the node.
+        :return: Last pointer. None if there isn't a node referenced.
         """
         return self.__data[-1]
 
     @property
     def min(self):
         """
-        Getter for minimum value of parent.
+        Getter for minimum value of the node.
         :return: Minimum value.
         """
         return self.__data[1]
@@ -88,7 +95,7 @@ class MWayTreeNode:
     @property
     def max(self):
         """
-        Getter for maximum value of parent.
+        Getter for maximum value of the node.
         :return: Maximum value.
         """
         return self.__data[len(self.__data) - 2]
@@ -96,23 +103,21 @@ class MWayTreeNode:
     @property
     def is_full(self):
         """
-        Returns whether the parent is full or not.
-        :return: True if the parent is full, False otherwise.
+        Returns whether the node is full or not.
+        :return: True if the node is full, False otherwise.
         """
         return self.__sizeof__() + 1 == self.paths
 
-    # Methods for representing the parent and its size
-
     def __sizeof__(self):
         """
-        Returns the number of values in the parent, not counting the pointers.
-        :return: Number of values in the parent.
+        Returns the number of values in the node, not counting the pointers.
+        :return: Number of values in the node.
         """
         return len(self.__data) // 2
 
     def __repr__(self):
         """
-        Returns a string representation of the parent.
+        Returns a string representation of the node.
         :return: Node[values]
         """
         values: list = []
@@ -122,11 +127,18 @@ class MWayTreeNode:
 
     def in_range(self, value):
         """
-        Returns whether a value is in the range of the parent.
+        Returns whether a value is in the range of the node.
         :param value: Value to check.
         :return: True if the value is in the range, False otherwise.
         """
         return self.min <= value <= self.max
+
+    """
+    Since the implementation of the m-way tree is based on a list, the
+    positions of the values are important.
+    These methods provides a way to convert a value position to a data position
+    and getters for the values in the node and the position of a value.
+    """
 
     @staticmethod
     def value_pos_to_data_pos(value_pos):
@@ -136,14 +148,6 @@ class MWayTreeNode:
         :return: Data position.
         """
         return value_pos * 2 + 1
-
-    @staticmethod
-    def __data_pos_to_value_pos(data_pos):
-        return (data_pos - 1) // 2
-
-    @staticmethod
-    def __pointer_pos_to_data_pos(pointer_pos):
-        return pointer_pos * 2
 
     def get_value(self, value_pos):
         """
@@ -165,13 +169,85 @@ class MWayTreeNode:
                 return i
         return None
 
+    """
+    The following actions should be performed by a node:
+    - Insert a value.
+    - Delete a value.
+    - Search a value.
+    - Insert a child node.
+    """
+
+    def insert_value(self, value):
+        """
+        Inserts a value in the node.
+        :param value: Value to insert.
+        :return:
+        """
+        # search the value in the node.
+        if self.get_value_pos(value) is not None:
+            raise Exceptions.NodeValueAlreadyExists
+        # search the position to insert the value.
+        value_pos = self.get_value_insertion_pos(value)
+        if type(value_pos) is MWayTreeNode:
+            raise Exceptions.ValueInChildNodeRange(value_pos)
+        elif value_pos is None:
+            raise Exceptions.InvalidValue
+        else:
+            self.insert_value_pos(value, value_pos)
+
+    def delete(self, index):
+        """
+        Removes the value at the index position passed. It removes the value
+        in the data structure and the next pointer in the process.
+        :param index: Position in the node to remove.
+        :return: The pointer deleted with value.
+        """
+        data_pos = self.value_pos_to_data_pos(index)
+        pointer = self.data[data_pos + 1]
+        self.__data = self.data[0:data_pos] + self.data[data_pos + 2:]
+        return pointer
+
+    def search(self, value, pos: int = 0):
+        """
+        Search a value in the node.
+        :param value: Value to search.
+        :param pos: Position to start searching.
+        :return: The position where the value is, or the next parent to search.
+        """
+        current_value = self.get_value(pos)
+        data_pos = self.value_pos_to_data_pos(pos)
+        if current_value == value:
+            return pos
+        elif pos == 0 and current_value > value:
+            return self.__data[data_pos - 1]
+        elif pos == self.__sizeof__() - 1 and current_value < value:
+            return self.__data[data_pos + 1]
+        elif current_value < value < self.get_value(pos + 1):
+            return self.__data[data_pos + 1]
+        else:
+            return self.search(value, pos + 1)
+
+    def insert_child(self, node: "MWayTreeNode", data_pos):
+        """
+        Inserts a child node into a pointer position.
+        :param node: Node to insert as child.
+        :param data_pos: Position to insert the child node into its parent.
+        :return:
+        """
+        self.__data[data_pos] = node
+        node.__parent = self
+
+    """
+    These methods help to insert a value in the node.
+    """
+
     def get_value_insertion_pos(self, value):
         """
         Searches for the position to insert a value, if value is in range of a
-        child parent, returns the child parent.
+        child node, returns the child node.
         :param value: Value to insert.
-        :return: A value position for inserting the value on the parent, or the
-        parent than value is in range.
+        :return: A value position for inserting the value on the node, or the
+        node than value is in range.
         """
         for pos in range(0, len(self.__data), 2):
             child_node: MWayTreeNode = self.__data[pos]
@@ -227,63 +303,3 @@ class MWayTreeNode:
         :return:
         """
         self.__data = [None, value] + self.__data
-
-    def insert_value(self, value):
-        """
-        Inserts a value in the parent.
-        :param value: Value to insert.
-        :return:
-        """
-        # search the value in the parent.
-        if self.get_value_pos(value) is not None:
-            raise Exceptions.NodeValueAlreadyExists
-        # search the position to insert the value.
-        value_pos = self.get_value_insertion_pos(value)
-        if type(value_pos) is MWayTreeNode:
-            raise Exceptions.ValueInChildNodeRange(value_pos)
-        elif value_pos is None:
-            raise Exceptions.InvalidValue
-        else:
-            self.insert_value_pos(value, value_pos)
-
-    def insert_child(self, node: "MWayTreeNode", data_pos):
-        """
-        Inserts a child parent into a pointer position.
-        :param node: Node to insert as child.
-        :param data_pos: Position to insert the child parent into its parent.
-        :return:
-        """
-        self.__data[data_pos] = node
-        node.__parent = self
-
-    def search(self, value, pos: int = 0):
-        """
-        Search a value in the parent.
-        :param value: Value to search.
-        :param pos: Position to start searching.
-        :return: The position where the value is, or the next parent to search.
-        """
-        current_value = self.get_value(pos)
-        data_pos = self.value_pos_to_data_pos(pos)
-        if current_value == value:
-            return pos
-        elif pos == 0 and current_value > value:
-            return self.__data[data_pos - 1]
-        elif pos == self.__sizeof__() - 1 and current_value < value:
-            return self.__data[data_pos + 1]
-        elif current_value < value < self.get_value(pos + 1):
-            return self.__data[data_pos + 1]
-        else:
-            return self.search(value, pos + 1)
-
-    def delete(self, index):
-        """
-        Removes the value at the index position passed. It removes the value
-        in the data structure and the next pointer in the process.
-        :param index: Position in the parent to remove.
-        :return: The pointer deleted with value.
-        """
-        data_pos = self.value_pos_to_data_pos(index)
-        pointer = self.data[data_pos + 1]
-        self.__data = self.data[0:data_pos] + self.data[data_pos + 2:]
-        return pointer
