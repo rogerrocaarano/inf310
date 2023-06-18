@@ -24,9 +24,9 @@ class MWayTreeNode:
         # The data structure will be a list, where the pointers to child nodes
         # will be in the even positions, and the values will be in the odd
         # positions.
-        self.__data = [None]
+        self._data = [None]
         for value in values:
-            self.__data += [value, None]
+            self._data += [value, None]
         self.__paths = paths
         # If parent parameter is passed, insert the parent into the node.
         if parent is None:
@@ -50,7 +50,7 @@ class MWayTreeNode:
         positions, and the values in the odd positions.
         :return: Data array of the parent.
         """
-        return self.__data
+        return self._data
 
     @property
     def parent(self):
@@ -74,7 +74,7 @@ class MWayTreeNode:
         Getter for first pointer of the node.
         :return: First pointer. None if there isn't a node referenced.
         """
-        return self.__data[0]
+        return self._data[0]
 
     @property
     def last_pointer(self):
@@ -82,7 +82,7 @@ class MWayTreeNode:
         Getter for last pointer of the node.
         :return: Last pointer. None if there isn't a node referenced.
         """
-        return self.__data[-1]
+        return self._data[-1]
 
     @property
     def min(self):
@@ -90,7 +90,7 @@ class MWayTreeNode:
         Getter for minimum value of the node.
         :return: Minimum value.
         """
-        return self.__data[1]
+        return self._data[1]
 
     @property
     def max(self):
@@ -98,7 +98,7 @@ class MWayTreeNode:
         Getter for maximum value of the node.
         :return: Maximum value.
         """
-        return self.__data[len(self.__data) - 2]
+        return self._data[len(self._data) - 2]
 
     @property
     def is_full(self):
@@ -113,17 +113,17 @@ class MWayTreeNode:
         Returns the number of values in the node, not counting the pointers.
         :return: Number of values in the node.
         """
-        return len(self.__data) // 2
+        return len(self._data) // 2
 
     def __repr__(self):
         """
         Returns a string representation of the node.
-        :return: Node[values]
+        :return: MNode[values]
         """
         values: list = []
-        for i in range(0, len(self.__data) // 2):
+        for i in range(0, len(self._data) // 2):
             values = values + [self.get_value(i)]
-        return f'Node{values.__str__()}'
+        return f'MNode{values.__str__()}'
 
     def in_range(self, value):
         """
@@ -156,7 +156,7 @@ class MWayTreeNode:
         :return: Value in value_pos.
         """
         data_pos = self.value_pos_to_data_pos(value_pos)
-        return self.__data[data_pos]
+        return self._data[data_pos]
 
     def get_value_pos(self, value):
         """
@@ -204,7 +204,7 @@ class MWayTreeNode:
         """
         data_pos = self.value_pos_to_data_pos(index)
         pointer = self.data[data_pos + 1]
-        self.__data = self.data[0:data_pos] + self.data[data_pos + 2:]
+        self._data = self.data[0:data_pos] + self.data[data_pos + 2:]
         return pointer
 
     def search(self, value, pos: int = 0):
@@ -219,22 +219,22 @@ class MWayTreeNode:
         if current_value == value:
             return pos
         elif pos == 0 and current_value > value:
-            return self.__data[data_pos - 1]
+            return self._data[data_pos - 1]
         elif pos == self.__sizeof__() - 1 and current_value < value:
-            return self.__data[data_pos + 1]
+            return self._data[data_pos + 1]
         elif current_value < value < self.get_value(pos + 1):
-            return self.__data[data_pos + 1]
+            return self._data[data_pos + 1]
         else:
             return self.search(value, pos + 1)
 
     def insert_child(self, node: "MWayTreeNode", data_pos):
         """
         Inserts a child node into a pointer position.
-        :param node: Node to insert as child.
+        :param node: BNode to insert as child.
         :param data_pos: Position to insert the child node into its parent.
         :return:
         """
-        self.__data[data_pos] = node
+        self._data[data_pos] = node
         node.__parent = self
 
     """
@@ -249,8 +249,8 @@ class MWayTreeNode:
         :return: A value position for inserting the value on the node, or the
         node than value is in range.
         """
-        for pos in range(0, len(self.__data), 2):
-            child_node: MWayTreeNode = self.__data[pos]
+        for pos in range(0, len(self._data), 2):
+            child_node: MWayTreeNode = self._data[pos]
             if child_node is not None and child_node.in_range(value):
                 return child_node
 
@@ -258,7 +258,7 @@ class MWayTreeNode:
             return 0
         elif self.max < value:
             return self.__sizeof__()
-        for i in range(0, self.__sizeof__() - 1):
+        for i in range(1, self.__sizeof__()):
             if self.get_value(i) > value:
                 return i
 
@@ -283,23 +283,23 @@ class MWayTreeNode:
         else:
             # Convert value_pos to data_pos and insert value.
             data_pos = self.value_pos_to_data_pos(value_pos)
-            self.__data = \
-                self.__data[0:data_pos + 1] \
-                + [value, None] \
-                + self.__data[data_pos + 1:]
+            data_pre_pos = self._data = self._data[0:data_pos]
+            data_insert = [value, None]
+            data_post_pos = self._data = self._data[data_pos:]
+            self._data = data_pre_pos + data_insert + data_post_pos
 
     def __append(self, value):
         """
-        Appends a value to the parent.
+        Appends a value to the node.
         :param value: Value to append.
         :return:
         """
-        self.__data = self.__data + [value, None]
+        self._data = self._data + [value, None]
 
     def __prepend(self, value):
         """
-        Prepends a value to the parent.
+        Prepends a value to the node.
         :param value: Value to prepend.
         :return:
         """
-        self.__data = [None, value] + self.__data
+        self._data = [None, value] + self._data
