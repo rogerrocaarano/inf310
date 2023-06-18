@@ -68,6 +68,10 @@ class MWayTree:
         :param value: Value to insert.
         :return: None.
         """
+        if type(value) is list:
+            for val in value:
+                self.insert(val)
+            return
         # If the root is None, create a new root.
         if self.root is None:
             self.root = Node(value, self.paths)
@@ -80,13 +84,6 @@ class MWayTree:
             return
         self._insert(value, node)
 
-    #     # If the root is None, create a new root.
-    #     if self.root is None:
-    #         self.root = BNode(value, self.paths)
-    #     # If the root is not None:
-    #     else:
-    #         self.__insert(value, self.root)
-    #
     def _insert(self, value, node: Node):
         """
         Insert a value into the tree, taking a node as parameter.

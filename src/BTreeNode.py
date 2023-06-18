@@ -41,12 +41,16 @@ class BTreeNode(MWayTreeNode):
         """
         split_pos = (self.__sizeof__() - 1) // 2
         mid_value = self.get_value(split_pos)
-        values: list = []
-        for i in range(split_pos + 1, self.__sizeof__()):
-            values = values + [self.get_value(i)]
-        new_node = MWayTreeNode(values, self.paths)
-        data_pos = self.value_pos_to_data_pos(split_pos)
-        new_data = self._data[0:data_pos]
+        data_split_pos = self.value_pos_to_data_pos(split_pos) + 1
+        data_new_node = self._data[data_split_pos:]
+        new_node = MWayTreeNode(1, self.paths)
+        new_node._data = data_new_node
+        # values: list = []
+        # for i in range(split_pos + 1, self.__sizeof__()):
+        #     values = values + [self.get_value(i)]
+        # new_node = MWayTreeNode(values, self.paths)
+        # data_pos = self.value_pos_to_data_pos(split_pos)
+        new_data = self._data[0:data_split_pos - 1]
         self._data = new_data
         return [mid_value, new_node]
 
