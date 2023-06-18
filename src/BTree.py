@@ -13,9 +13,9 @@ class BTree(MWayTree):
 
     def _insert(self, value, node: MWayTreeNode):
         if node.is_full:
-            node = BTreeNode.cast(node)
+            node = BTreeNode.cast_as_b_node(node)
             self.__split_insert(node, value)
-            node = BTreeNode.cast(node)
+            node = BTreeNode.cast_as_m_node(node)
         else:
             super()._insert(value, node)
 
@@ -35,9 +35,9 @@ class BTree(MWayTree):
             node.insert_value(mid_value)
             parent_b_first_value_pos = (self.__sizeof__() - 1 // 2) + 1
             parent_b_first_value = parent.get_value(parent_b_first_value_pos)
-            parent: BTreeNode = BTreeNode.cast(parent)
+            parent: BTreeNode = BTreeNode.cast_as_b_node(parent)
             self.__split_insert(parent, value)
-            parent: MWayTreeNode = BTreeNode.cast(parent)
+            parent: MWayTreeNode = BTreeNode.cast_as_m_node(parent)
             pos = self.search(parent_b_first_value)
             pos[0].insert_child(new_node, 0)
         else:
@@ -45,4 +45,7 @@ class BTree(MWayTree):
             parent.insert_value(mid_value)
             pos = parent.search(mid_value)
             pos = MWayTreeNode.value_pos_to_data_pos(pos)
+            parent: MWayTreeNode = BTreeNode.cast_as_m_node(parent)
             parent.insert_child(new_node, pos + 1)
+            node: MWayTreeNode = BTreeNode.cast_as_m_node(node)
+            parent.insert_child(node, pos - 1)

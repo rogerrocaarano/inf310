@@ -283,9 +283,9 @@ class MWayTreeNode:
         else:
             # Convert value_pos to data_pos and insert value.
             data_pos = self.value_pos_to_data_pos(value_pos)
-            data_pre_pos = self._data = self._data[0:data_pos]
+            data_pre_pos = self._data[0:data_pos]
             data_insert = [value, None]
-            data_post_pos = self._data = self._data[data_pos:]
+            data_post_pos = self._data[data_pos:]
             self._data = data_pre_pos + data_insert + data_post_pos
 
     def __append(self, value):

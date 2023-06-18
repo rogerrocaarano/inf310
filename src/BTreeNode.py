@@ -18,16 +18,20 @@ class BTreeNode(MWayTreeNode):
         super().__init__(values, paths, parent, child_pos)
 
     @classmethod
-    def cast(cls, node):
+    def cast_as_b_node(cls, node):
         """
         Casts a MWayTreeNode to a BTreeNode.
         :param node: An MWayTreeNode to cast.
         :return: A BTreeNode.
         """
+        if type(node) is MWayTreeNode:
+            node.__class__ = BTreeNode
+        return node
+
+    @classmethod
+    def cast_as_m_node(cls, node):
         if type(node) is BTreeNode:
             node.__class__ = MWayTreeNode
-        elif type(node) is MWayTreeNode:
-            node.__class__ = BTreeNode
         return node
 
     def split_node(self):
