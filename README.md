@@ -24,3 +24,7 @@ repetición de código.
 El presente proyecto fue elaborado por Róger Roca Arano, mediante el curso de
 la materia INF310, es de código abierto y se distribuye bajo la licencia
 GNU GPL v3.0.
+
+___
+
+https://github.com/rogerrocaarano/inf310
