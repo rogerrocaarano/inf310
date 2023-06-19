@@ -31,8 +31,8 @@ class MWayTree:
     @property
     def root(self):
         """
-        Getter for root parent.
-        :return: Root parent.
+        Getter for root node.
+        :return: Root node.
         """
         return self.__root
 
@@ -68,27 +68,36 @@ class MWayTree:
         :param value: Value to insert.
         :return: None.
         """
+        if type(value) is list:
+            for val in value:
+                self.insert(val)
+            return
         # If the root is None, create a new root.
         if self.root is None:
             self.root = Node(value, self.paths)
-        # If the root is not None:
-        else:
-            self.__insert(value, self.root)
+            return
+        # Try to find the value using search
+        search_result = self.search(value)
+        node: Node = search_result[0]
+        pos = search_result[1]
+        if type(node) is Node and pos is not None:
+            return
+        self._insert(value, node)
 
-    def __insert(self, value, node: "Node"):
+    def _insert(self, value, node: Node):
         """
-        Insert a value into the tree, taking a parent as parameter.
+        Insert a value into the tree, taking a node as parameter.
         :param value: Value to insert.
         :param node: Node to start searching insertion position.
         :return:
         """
-        if node.in_range(value) and not node.is_full:
+        if self.in_range(value) and not node.is_full:
             try:
                 node.insert_value(value)
             except NodeValueAlreadyExists:
                 return
             except ValueInChildNodeRange as e:
-                self.__insert(value, e.node)
+                self._insert(value, e.node)
             except InvalidValue:
                 self.__insert_between_min_max(value, node)
             else:
@@ -100,9 +109,9 @@ class MWayTree:
 
     def __insert_in_full_node(self, value, node: Node):
         """
-        This method inserts a value in the tree, taking a full parent as
-        parameter, it creates a new parent or pass the next parent to try
-        insertion to __insert(value, parent).
+        This method inserts a value in the tree, taking a full node as
+        parameter, it creates a new node or pass the next node to try
+        insertion to the method __insert(value, parent).
         :param value: Value to insert.
         :param node: Node to start searching insertion position.
         :return:
@@ -111,21 +120,21 @@ class MWayTree:
             if node.first_pointer is None:
                 Node(value, self.paths, node, 0)
             else:
-                self.__insert(value, node.first_pointer)
+                self._insert(value, node.first_pointer)
         elif value > node.max:
             if node.last_pointer is None:
                 pos = Node.value_pos_to_data_pos(
                     node.__sizeof__() - 1) + 1
                 Node(value, self.paths, node, pos)
             else:
-                self.__insert(value, node.last_pointer)
+                self._insert(value, node.last_pointer)
         else:
             self.__insert_between_min_max(value, node)
 
     def __insert_between_min_max(self, value, node: Node):
         """
         This method inserts a value in the tree, in between the min and max
-        values of a parent.
+        values of a node.
         :param value: Value to insert.
         :param node: Node to start searching insertion position.
         :return:
@@ -136,7 +145,7 @@ class MWayTree:
                 if node.data[child_pos] is None:
                     Node(value, self.paths, node, child_pos)
                 else:
-                    self.__insert(value, node.data[child_pos])
+                    self._insert(value, node.data[child_pos])
 
     def search(self, value, node: Node = None):
         """
@@ -177,3 +186,33 @@ class MWayTree:
             parent.insert_child(child, data_pos)
         else:
             self.__delete(last_pointer, child)
+
+    def lowest_value(self, node: Node = None):
+        """
+        Getter for the lowest value reachable from a node.
+        :return: Lowest value reachable.
+        """
+        if node is None:
+            node = self.root
+        if node.data[0] is None:
+            return node.min
+        return self.lowest_value(node.data[0])
+
+    def highest_value(self, node: Node = None):
+        """
+        Getter for the highest value reachable from a node.
+        :return: Highest value reachable.
+        """
+        if node is None:
+            node = self.root
+        if node.data[-1] is None:
+            return node.max
+        return self.highest_value(node.data[-1])
+
+    def in_range(self, value):
+        """
+        Checks if a value is in the range of a node and its children.
+        :param value: Value to check.
+        :return: True if value is in range, False otherwise.
+        """
+        return self.lowest_value() <= value <= self.highest_value()
