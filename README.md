@@ -10,6 +10,9 @@ Se incluyen las siguientes estructuras de datos con sus respectivos nodos:
 - Árbol Binario de Búsqueda
 - Árbol de M-Vías
 - Árbol B
+- Grafos dirigidos
+- Grafos no dirigidos
+- Grafos ponderados
 
 Se utilizó en la medida de lo posible herencia y polimorfismo para evitar
 repetición de código.
