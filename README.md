@@ -10,6 +10,9 @@ Se incluyen las siguientes estructuras de datos con sus respectivos nodos:
 - Árbol Binario de Búsqueda
 - Árbol de M-Vías
 - Árbol B
+- Grafos dirigidos
+- Grafos no dirigidos
+- Grafos ponderados
 
 Se utilizó en la medida de lo posible herencia y polimorfismo para evitar
 repetición de código.
@@ -24,3 +27,7 @@ repetición de código.
 El presente proyecto fue elaborado por Róger Roca Arano, mediante el curso de
 la materia INF310, es de código abierto y se distribuye bajo la licencia
 GNU GPL v3.0.
+
+___
+
+https://github.com/rogerrocaarano/inf310
