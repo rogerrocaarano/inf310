@@ -16,9 +16,9 @@ class BinarySearchTree:
     """
     A Binary Search Tree is a Binary Tree that has the following properties:
     - The left subtree of a node contains only nodes with values lesser than 
-    the node's key.
+    the node's __key.
     - The right subtree of a node contains only nodes with keys greater than 
-    the node's key.
+    the node's __key.
     - The left and right subtree each must also be a binary search tree.
     - It has a parameter called root that is the top node of the tree.
     """
