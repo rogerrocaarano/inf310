@@ -77,6 +77,74 @@ class TestUndirectedGraph(unittest.TestCase):
             graph.vertexes['C'].links
         )
 
+    def test4(self):
+        """
+        Test Dijkstra's algorithm with an UndirectedGraph.
+        :return:
+        """
+        graph = UndirectedGraph()
+        graph.add_link(0, 1, 2)
+        graph.add_link(0, 2, 6)
+        graph.add_link(1, 3, 5)
+        graph.add_link(2, 3, 8)
+        graph.add_link(3, 5, 15)
+        graph.add_link(3, 4, 10)
+        graph.add_link(4, 5, 6)
+        graph.add_link(5, 6, 6)
+        graph.add_link(4, 6, 2)
+
+        vertex_0 = graph.get_vertex(0)
+        vertex_1 = graph.get_vertex(1)
+        vertex_2 = graph.get_vertex(2)
+        vertex_3 = graph.get_vertex(3)
+        vertex_4 = graph.get_vertex(4)
+        vertex_5 = graph.get_vertex(5)
+        vertex_6 = graph.get_vertex(6)
+
+        dijkstra_result = graph.dijkstra(vertex_0)
+        dijkstra_expected = {
+            vertex_0: [None, 0],
+            vertex_1: [vertex_0, 2],
+            vertex_2: [vertex_0, 6],
+            vertex_3: [vertex_1, 7],
+            vertex_4: [vertex_3, 17],
+            vertex_5: [vertex_3, 22],
+            vertex_6: [vertex_4, 19]
+        }
+        self.assertEqual(dijkstra_expected, dijkstra_result)
+
+    def test5(self):
+        """
+        Test lower_path method.
+        :return:
+        """
+        graph = UndirectedGraph()
+        graph.add_link(0, 1, 2)
+        graph.add_link(0, 2, 6)
+        graph.add_link(1, 3, 5)
+        graph.add_link(2, 3, 8)
+        graph.add_link(3, 5, 15)
+        graph.add_link(3, 4, 10)
+        graph.add_link(4, 5, 6)
+        graph.add_link(5, 6, 6)
+        graph.add_link(4, 6, 2)
+
+        vertex_0 = graph.get_vertex(0)
+        vertex_1 = graph.get_vertex(1)
+        vertex_2 = graph.get_vertex(2)
+        vertex_3 = graph.get_vertex(3)
+        vertex_4 = graph.get_vertex(4)
+        vertex_5 = graph.get_vertex(5)
+        vertex_6 = graph.get_vertex(6)
+
+        path_result = graph.lower_cost_path(vertex_0, vertex_6)
+        path_expected = {
+            "path": [vertex_0, vertex_1, vertex_3, vertex_4, vertex_6],
+            "cost": 19
+        }
+
+        self.assertEqual(path_expected, path_result)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -11,8 +11,9 @@ class UndirectedGraph(Graph):
     both directions.
     """
 
-    def __init__(self, vertexes=None):
-        super().__init__(vertexes)
+    def __init__(self, vertex=None):
+        assert vertex is None or isinstance(vertex, Vertex)
+        super().__init__(vertex)
 
     def add_link(self, from_key, to_key, weight=0):
         super().add_link(from_key, to_key, weight)

@@ -125,3 +125,120 @@ class Graph(object):
 
     def get_vertices(self):
         return self.vertexes.keys()
+
+    def lower_cost_path(self, from_key: Vertex, to_key: Vertex):
+        """
+        Get the lower cost path between two Vertexes.
+        :param from_key: Starting Vertex or key of the Vertex to start from.
+        :param to_key: Ending Vertex or key of the Vertex to end to.
+        :return: A dict with the path and the cost.
+        """
+        if type(from_key) is not Vertex:
+            from_key = self.get_vertex(from_key)
+        if type(to_key) is not Vertex:
+            to_key = self.get_vertex(to_key)
+
+        assert from_key is not None, \
+            "from_key is not in the graph"
+        assert to_key is not None, \
+            "to_key is not in the graph"
+        assert from_key is not to_key, \
+            "from_key and to_key are the same"
+        assert from_key.key in self.vertexes.keys(), \
+            "from_key is not in the graph"
+        assert to_key.key in self.vertexes.keys(), \
+            "to_key is not in the graph"
+
+        distance = self.dijkstra(from_key)
+        path: list = [to_key]
+        vertex = distance[to_key][0]
+        while vertex is not None:
+            path.insert(0, vertex)
+            vertex = distance[vertex][0]
+        return {"path": path, "cost": distance[to_key][1]}
+
+    def dijkstra(self, vertex: Vertex, distance: dict = None):
+        """
+        Dijkstra algorithm implementation.
+        :param vertex: Source Vertex.
+        :param distance: **Don't use this parameter, it's used for recursion.**
+        :return: distance, a dict of Vertexes as keys and a list of
+        [previous_vertex, distance] as values , where previous_vertex is None
+        and distance is 0 for the head of the path.
+        """
+        if vertex is None:
+            # When the recursion is over, reset the visited status of all the
+            # Vertexes and return the distance dictionary.
+            self.__reset_visited_status()
+            return distance
+
+        if distance is None:
+            # Construct the distance dictionary with all the vertexes of the
+            # Graph, and set the distance to inf.
+            distance = {}
+            for key in self.vertexes.keys():
+                v = self.get_vertex(key)
+                distance[v] = [None, float("inf")]
+            # Set the distance to the starting vertex to 0.
+            distance[vertex] = [None, 0]
+        # Update the distances of the adjacent vertexes, and get the next
+        # vertex to visit.
+        self.__update_distances_adjacent_vertex(vertex, distance)
+        next_vertex = self.__get_lower_cost_visitable_vertex(distance)
+        return self.dijkstra(next_vertex, distance)
+
+    @staticmethod
+    def __update_distances_adjacent_vertex(current_vertex: Vertex,
+                                           distance: dict
+                                           ):
+        """
+        Update the distances of the adjacent vertexes of the current vertex for
+        the Dijkstra algorithm.
+        :param current_vertex: The current visited vertex.
+        :param distance: The distance dictionary.
+        :return:
+        """
+        for adjacent_vertex, weight in current_vertex.links.items():
+            if not adjacent_vertex.visited:
+                distance_current_vertex = distance[current_vertex][1]
+                new_distance = distance_current_vertex + weight
+                v = distance[adjacent_vertex][0]
+                d = distance[adjacent_vertex][1]
+                if v is None or d > new_distance:
+                    distance[adjacent_vertex] = [current_vertex, new_distance]
+        current_vertex.visited = True
+
+    def __get_lower_cost_visitable_vertex(self, distance_dict: dict):
+        """
+        Get the lower cost vertex to visit.
+        :param distance_dict: The distance dictionary.
+        :return: The lower cost vertex to visit, or None if there are no more
+        vertexes to visit.
+        """
+        lower_cost = [None, float("inf")]
+        visitable_nodes = self.get_visitable_nodes()
+        if len(visitable_nodes) != 0:
+            for vertex in visitable_nodes:
+                distance = distance_dict[vertex][1]
+                if distance < lower_cost[1]:
+                    lower_cost = [vertex, distance]
+        return lower_cost[0]
+
+    def get_visitable_nodes(self):
+        """
+        Get the list of vertexes that are not visited.
+        :return: A list of vertexes that are not visited.
+        """
+        visitable_nodes = []
+        for vertex in self.vertexes.values():
+            if not vertex.visited:
+                visitable_nodes.append(vertex)
+        return visitable_nodes
+
+    def __reset_visited_status(self):
+        """
+        Reset the visited status of all the Vertexes of the Graph.
+        :return:
+        """
+        for vertex in self.vertexes.values():
+            vertex.visited = False
