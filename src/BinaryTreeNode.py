@@ -1,4 +1,13 @@
 class BinaryTreeNode:
+    """
+    A node in a Binary Tree formerly has this parameters:
+    - data: value to store on the node.
+    - left: the node on the left side.
+    - right: the node on the right side.
+    In addition for helping handling the data structure these parameters:
+    - parent: the node than the current node is child.
+    - children: the number of children than the node has.
+    """
     def __init__(self,
                  data,
                  parent: "BinaryTreeNode" = None
@@ -13,16 +22,6 @@ class BinaryTreeNode:
         self.__right: "BinaryTreeNode" = None
         self.__parent = parent
         self.__children = 0
-
-    """
-    A node in a Binary Tree formerly has this parameters:
-    - data: value to store on the node.
-    - left: the node on the left side.
-    - right: the node on the right side.
-    In addition for helping handling the data structure these parameters:
-    - parent: the node than the current node is child.
-    - children: the number of children than the node has.
-    """
 
     @property
     def data(self):
@@ -64,12 +63,10 @@ class BinaryTreeNode:
         """
         return self.__children
 
-    """
-    The parameters left, right and parent have setters for its 
-    respective values.
-    Te parameter children, is derived from the state of the left and 
-    right children.
-    """
+    # The parameters left, right and parent have setters for its
+    # respective values.
+    # Te parameter children, is derived from the state of the left and
+    # right children.
 
     @left.setter
     def left(self, node: "BinaryTreeNode"):
@@ -144,10 +141,8 @@ class BinaryTreeNode:
         self.parent.__children -= 1
         self.__parent = None
 
-    """
-    These methods are overwrites for the default operators for comparing a 
-    node with other directly by the value stored on it.
-    """
+    # These methods are overwrites for the default operators for comparing a 
+    # node with other directly by the value stored on it.
 
     def __eq__(self, other):
         return self.__data == other.data
@@ -167,9 +162,7 @@ class BinaryTreeNode:
     def __ne__(self, other):
         return self.__data != other.data
 
-    """
-    These methods are used for represent the node in a readable format.
-    """
+    # These methods are used for represent the node in a readable format.
 
     def __repr__(self):
         return f'Node({self.__data})'

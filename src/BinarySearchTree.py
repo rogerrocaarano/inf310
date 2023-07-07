@@ -1,8 +1,21 @@
-from src.BinaryTreeNode import *
+from src.BinaryTreeNode import BinaryTreeNode
 from src.Exceptions import *
 
 
 class BinarySearchTree:
+    """
+    A Binary Search Tree is a Binary Tree that has the following properties:
+    - The left subtree of a node contains only nodes with values lesser than 
+    the node's __key.
+    - The right subtree of a node contains only nodes with keys greater than 
+    the node's __key.
+    - The left and right subtree each must also be a binary search tree.
+    - It has a parameter called root that is the top node of the tree.
+    A Binary Search Tree has the following basic methods:
+    - insert: insert a value in the tree.
+    - search: search a value in the tree.
+    - delete: delete a value in the tree.
+    """
     def __init__(self, tree_array: list = None):
         """
         Constructor for the BinarySearchTree class.
@@ -13,30 +26,16 @@ class BinarySearchTree:
             for value in tree_array:
                 self.insert(value)
 
-    """
-    A Binary Search Tree is a Binary Tree that has the following properties:
-    - The left subtree of a node contains only nodes with values lesser than 
-    the node's __key.
-    - The right subtree of a node contains only nodes with keys greater than 
-    the node's __key.
-    - The left and right subtree each must also be a binary search tree.
-    - It has a parameter called root that is the top node of the tree.
-    """
-
     @property
     def root(self):
+        """root Getter
+        Returns: The root of the tree.
+        """
         return self.__root
 
     @root.setter
     def root(self, node: "BinaryTreeNode"):
         self.__root = node
-
-    """
-    A Binary Search Tree has the following basic methods:
-    - insert: insert a value in the tree.
-    - search: search a value in the tree.
-    - delete: delete a value in the tree.
-    """
 
     def insert(self, value):
         """
@@ -103,9 +102,9 @@ class BinarySearchTree:
         """
         Public method for deleting a parent from the tree.
         :param value: Value to be deleted.
-        :param promote: Method for promoting a parent when deleting a parent with
-        two children. Choose between "higher-left" or "lower-right", default
-        is "higher-left".
+        :param promote: Method for promoting a parent when deleting a parent 
+        with two children. Choose between "higher-left" or "lower-right", 
+        default is "higher-left".
         """
         node = self.__search(self.root, value)
         # Case 1: Value not found
@@ -116,19 +115,18 @@ class BinarySearchTree:
             self.__delete_leaf_node(node)
         elif node.children == 1:
             self.__delete_one_child_node(node)
-        # Case 4: Node has two children
+        # Case 3: Node has two children
         else:
             if promote == "higher-left":
                 self.__promote_higher_left(node)
             elif promote == "lower-right":
-                self.__promote_lower_right(node)
+                # self.__promote_lower_right(node)
+                pass
             else:
                 raise InvalidPromotionMethod
 
-    """
-    These methods are helper methods for the delete method.
-    In the deletion process, a parent can have 0, 1 or 2 children.
-    """
+    # These methods are helper methods for the delete method.
+    # In the deletion process, a parent can have 0, 1 or 2 children.
 
     def __delete_leaf_node(self, node: "BinaryTreeNode"):
         """
@@ -199,11 +197,9 @@ class BinarySearchTree:
         """
         return node.left is None or node.right is None
 
-    """
-    At deletion, a parent with two children can be promoted in two ways:
-    1. Promote the highest parent in the left subtree.
-    2. Promote the lowest parent in the right subtree.
-    """
+    # At deletion, a parent with two children can be promoted in two ways:
+    # 1. Promote the highest parent in the left subtree.
+    # 2. Promote the lowest parent in the right subtree.
 
     def __promote_higher_left(self, node):
         """
@@ -228,9 +224,7 @@ class BinarySearchTree:
         higher.right = right
         higher.left = left
 
-    """
-    These methods are helper methods for the promotion process.
-    """
+    # These methods are helper methods for the promotion process.
 
     @staticmethod
     def higher_from_left(root: "BinaryTreeNode"):
@@ -262,10 +256,8 @@ class BinarySearchTree:
             lower = lower.left
         return lower
 
-    """
-    A BST can be traversed through three basic algorithms: inorder, preorder,
-    and postorder tree walks.
-    """
+    # A BST can be traversed through three basic algorithms: inorder, preorder,
+    # and postorder tree walks.
 
     def in_order(self, node: "BinaryTreeNode", tree: "list"):
         """
@@ -305,15 +297,14 @@ class BinarySearchTree:
             self.post_order(node.right, tree)
             tree.append(node.data)
 
-    """
-    A BST is balanced if the height of the left and right subtrees of every
-    parent differ by at most 1.
-    For balancing a BST, we can use the following approach:
-    - Traverse given BST in inorder and store result in an array. Note that
-    this array would be sorted as inorder.
-    - Build a balanced BST from the above created sorted array using a
-    recursive approach.
-    """
+
+    # A BST is balanced if the height of the left and right subtrees of every
+    # parent differ by at most 1.
+    # For balancing a BST, we can use the following approach:
+    # - Traverse given BST in inorder and store result in an array. Note that
+    # this array would be sorted as inorder.
+    # - Build a balanced BST from the above created sorted array using a
+    # recursive approach.
 
     def balance(self):
         """
@@ -364,9 +355,7 @@ class BinarySearchTree:
         BinarySearchTree.__get_balanced_tree(left_tree, balanced_tree)
         BinarySearchTree.__get_balanced_tree(right_tree, balanced_tree)
 
-    """
-    These methods are used for represent the node in a readable format.
-    """
+    # These methods are used for represent the node in a readable format.
 
     def __repr__(self):
         return f'BinarySearchTree({self.__root})'
